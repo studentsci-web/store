@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ตรวจสอบคำสั่งซื้ออุปกรณ์การเรียน คณะวิทยาศาสตร์และเทคโนโลยี มทร.รัตนโกสินทร์</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Noto+Serif+Thai:wght@600;700&display=swap" media="print" onload="this.media='all';this.onload=null">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Noto+Serif+Thai:wght@600;700&display=swap"></noscript>
+<style>
+  :root {
+    --ink: #12273b; --ink-soft: #4a5d6e; --teal: #0f6b66; --teal-dark: #0a524e;
+    --mint: #e4f1ee; --paper: #f5f8f7; --card: #ffffff; --line: #cfdcd8;
+    --amber: #f2b632; --amber-soft: #fff1cc; --danger: #b3261e; --danger-soft: #fde8e6;
+    --mark: 46px;
+    --serif: "Noto Serif Thai", "Tahoma", serif;
+    --sans: "IBM Plex Sans Thai", "Tahoma", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 1.0625rem; line-height: 1.75; }
+  img, svg { max-width: 100%; }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+  [hidden] { display: none !important; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  .ph { background: var(--amber-soft); border-radius: 3px; }
+  h1, h2, h3 { font-family: var(--serif); text-wrap: balance; margin: 0; }
+
+  .demo-banner { background: var(--amber-soft); border-bottom: 1px solid var(--amber); padding: 10px 16px; font-size: 0.9375rem; line-height: 1.55; text-align: center; }
+
+  .site-head { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; max-width: 1080px; margin: 0 auto; padding: 18px 16px 6px; }
+  .mark { flex: none; width: var(--mark); height: var(--mark); border-radius: 12px; background: var(--teal); color: #fff; display: grid; place-items: center; overflow: hidden; }
+  .mark svg { width: 28px; height: 28px; }
+  .mark.has-img { background: transparent; }
+  .mark img { width: 100%; height: 100%; object-fit: contain; }
+  .org { flex: 1 1 14rem; min-width: 0; margin: 0; line-height: 1.45; font-size: 0.9375rem; color: var(--ink-soft); }
+  .org strong { display: block; color: var(--ink); font-weight: 600; font-size: 1rem; }
+  .head-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-left: auto; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
+    min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid var(--ink); background: #fff; color: var(--ink);
+    font-size: 0.9375rem; font-weight: 500; cursor: pointer; white-space: nowrap; }
+  .btn:hover:not(:disabled) { background: var(--ink); color: #fff; }
+  .btn:disabled { border-color: var(--line); color: #8a9aa6; background: #f3f6f5; cursor: not-allowed; }
+  .btn.primary { background: var(--teal); border-color: var(--teal); color: #fff; font-weight: 600; }
+  .btn.primary:hover:not(:disabled) { background: var(--teal-dark); border-color: var(--teal-dark); }
+  .btn.teal { border-color: var(--teal); color: var(--teal-dark); }
+  .btn.teal:hover:not(:disabled) { background: var(--teal); color: #fff; }
+  .btn.sm { min-height: 40px; padding: 0 14px; font-size: 0.9063rem; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 14px 16px 60px; }
+  .logo-band { display: flex; justify-content: center; margin-bottom: 10px; }
+  .logo-slot { flex: none; width: calc(var(--mark) * 3); height: calc(var(--mark) * 3); max-width: 100%;
+    display: grid; place-content: center; text-align: center; padding: 8px;
+    border: 2px dashed var(--amber); border-radius: 16px; background: var(--amber-soft); color: var(--ink-soft); font-size: 0.875rem; line-height: 1.5; }
+  .logo-slot.has-logo { border: 0; background: transparent; border-radius: 0; padding: 0; }
+  .logo-slot img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+  h1.page { font-size: clamp(1.6rem, 5vw, 2.1rem); line-height: 1.4; margin: 0 0 6px; text-align: center; }
+  .page-lead { margin: 0 auto 20px; max-width: 46em; text-align: center; color: var(--ink-soft); font-size: 1rem; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px 18px; margin-bottom: 16px; }
+  .card h2 { font-weight: 600; font-size: 1.25rem; line-height: 1.5; margin-bottom: 4px; }
+  .card .sub { margin: 0 0 14px; color: var(--ink-soft); font-size: 0.9375rem; }
+  label, .label { display: block; font-weight: 500; margin-bottom: 4px; }
+  input[type="text"], input[type="tel"], select { width: 100%; min-height: 50px; padding: 10px 14px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; }
+  input:hover, select:hover { border-color: #9fb6b0; }
+  [aria-invalid="true"] { border-color: var(--danger) !important; }
+  .code-in { font-variant-numeric: tabular-nums; letter-spacing: .22em; font-size: 1.3rem; font-weight: 600; text-align: center; }
+  .err { margin: 8px 0 0; color: var(--danger); font-size: 0.9375rem; line-height: 1.5; }
+  .err:empty { display: none; }
+
+  .qrow { display: grid; gap: 14px; }
+  @media (min-width: 720px) { .qrow { grid-template-columns: minmax(0, 1fr) 190px auto; align-items: end; } }
+  .notice { margin: 14px 0 0; padding: 10px 14px; border-radius: 10px; background: var(--mint); border-left: 4px solid var(--teal); font-size: 0.9375rem; line-height: 1.6; }
+  .notice.warn { background: var(--amber-soft); border-left-color: var(--amber); }
+  .notice.bad { background: var(--danger-soft); border-left-color: var(--danger); }
+
+  details.fallback { border: 1px solid var(--line); border-radius: 12px; background: #fff; margin-bottom: 16px; }
+  details.fallback > summary { list-style: none; cursor: pointer; padding: 14px 16px; font-weight: 500; display: flex; align-items: center; gap: 10px; min-height: 52px; }
+  details.fallback > summary::-webkit-details-marker { display: none; }
+  details.fallback > summary::before { content: ""; width: 9px; height: 9px; border-right: 2px solid var(--ink-soft); border-bottom: 2px solid var(--ink-soft); transform: rotate(-45deg); transition: transform .15s; flex: none; }
+  details.fallback[open] > summary::before { transform: rotate(45deg); }
+  .fb-body { padding: 0 16px 16px; }
+  .fb-row { display: grid; gap: 12px; }
+  @media (min-width: 620px) { .fb-row { grid-template-columns: minmax(0, 1fr) auto; align-items: end; } }
+
+  .sorts { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; font-size: 0.9375rem; color: var(--ink-soft); }
+  .sorts select { width: auto; min-width: 170px; min-height: 44px; }
+
+  .rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .row { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 10px 16px; align-items: center; }
+  @media (min-width: 900px) { .row { grid-template-columns: 150px minmax(0, 1fr) 130px 150px auto; } }
+  .ordno { font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: .03em; }
+  .when { font-size: 0.875rem; color: var(--ink-soft); }
+  .who-name { font-weight: 600; overflow-wrap: anywhere; line-height: 1.5; }
+  .mask { font-variant-numeric: tabular-nums; letter-spacing: .02em; color: var(--ink-soft); font-size: 0.9375rem; }
+  .amt { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; line-height: 1.4; font-variant-numeric: tabular-nums; }
+  .amt small { font-family: var(--sans); font-weight: 500; font-size: 0.875rem; margin-left: 4px; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.9063rem; line-height: 1.8; padding: 0 12px; border-radius: 999px; white-space: nowrap; }
+  .badge::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+  .badge.pending { background: var(--amber-soft); color: #7a5600; }
+  .badge.approved { background: var(--mint); color: var(--teal-dark); }
+  .badge.declined { background: var(--danger-soft); color: var(--danger); }
+  .row-note { grid-column: 1 / -1; margin: 0; font-size: 0.9063rem; line-height: 1.6; background: var(--danger-soft); color: var(--danger); border-radius: 10px; padding: 8px 12px; }
+  .empty { background: var(--card); border: 1px dashed var(--line); border-radius: 14px; padding: 28px 20px; text-align: center; color: var(--ink-soft); }
+  .empty strong { display: block; color: var(--ink); font-family: var(--serif); font-size: 1.1rem; margin-bottom: 6px; }
+
+  dialog { border: 0; border-radius: 16px; padding: 0; width: min(100% - 24px, 640px); max-height: calc(100dvh - 24px); color: var(--ink); box-shadow: 0 20px 60px rgba(18,39,59,.3); }
+  dialog::backdrop { background: rgba(18,39,59,.55); }
+  .dlg-head { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: #fff; z-index: 1; }
+  .dlg-head h2 { margin: 0; font-size: 1.25rem; line-height: 1.5; flex: 1; }
+  .x { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--paper); font-size: 1.3rem; line-height: 1; cursor: pointer; }
+  .dlg-body { padding: 16px 20px; display: grid; gap: 16px; }
+  .dlg-foot { padding: 14px 20px 18px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; }
+  .itab { width: 100%; border-collapse: collapse; font-size: 0.9688rem; }
+  .itab th, .itab td { text-align: left; padding: 9px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .itab th { font-size: 0.875rem; color: var(--ink-soft); font-weight: 600; }
+  .itab td:last-child, .itab th:last-child { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .itab tr.sum td { border-bottom: 0; font-weight: 700; font-size: 1.0625rem; }
+  .dl { display: grid; grid-template-columns: 10.5em minmax(0, 1fr); gap: 6px 14px; margin: 0; font-size: 0.9688rem; }
+  .dl dt { color: var(--ink-soft); }
+  .dl dd { margin: 0; font-weight: 500; overflow-wrap: anywhere; }
+  @media (max-width: 560px) { .dl { grid-template-columns: 1fr; gap: 0; } .dl dt { margin-top: 8px; } }
+
+  .site-foot { border-top: 1px solid var(--line); background: #fff; padding: 24px 16px 32px; font-size: 0.9375rem; color: var(--ink-soft); line-height: 1.7; }
+  .site-foot > div { max-width: 1080px; margin: 0 auto; }
+  .site-foot p { margin: 0 0 6px; }
+</style>
+</head>
+<body>
+
+<div class="demo-banner" id="demoBanner" role="note" hidden>
+  โหมดตัวอย่าง: ยังไม่ได้ใส่ <code>apiUrl</code> ใน config.js ข้อมูลที่แสดงเป็นข้อมูลสมมติ (ลองรหัส 482913 กับเบอร์ 5678)
+</div>
+
+<header class="site-head">
+  <div class="mark" aria-hidden="true">
+    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4h8M14 4v8l-6.2 11.2A3 3 0 0 0 10.4 27.5h11.2a3 3 0 0 0 2.6-4.3L18 12V4"/><path d="M10.5 20h11"/>
+    </svg>
+  </div>
+  <p class="org">
+    <strong data-cfg="orgLine1">งานกิจการนักศึกษา คณะวิทยาศาสตร์และเทคโนโลยี</strong>
+    <span data-cfg="orgLine2">มหาวิทยาลัยเทคโนโลยีราชมงคลรัตนโกสินทร์</span>
+  </p>
+  <div class="head-actions"><a class="btn teal" id="orderLink" href="index.html">กลับไปหน้าสั่งซื้อ</a></div>
+</header>
+
+<main class="wrap">
+  <div class="logo-band">
+    <div class="logo-slot" id="logoSlot" role="img" aria-label="พื้นที่สำหรับโลโก้มหาวิทยาลัย">โลโก้<br>มหาวิทยาลัย</div>
+  </div>
+
+  <h1 class="page" data-cfg="ordersTitle">ตรวจสอบคำสั่งซื้อ</h1>
+  <p class="page-lead" data-cfg="ordersIntro">กรอกรหัสตรวจสอบ 6 หลักที่ได้ตอนสั่งซื้อ คู่กับเบอร์โทรศัพท์ 4 ตัวท้ายที่กรอกไว้</p>
+
+  <div class="card">
+    <form id="codeForm" novalidate>
+      <div class="qrow">
+        <div>
+          <label for="code">รหัสตรวจสอบ 6 หลัก</label>
+          <input type="text" id="code" class="code-in" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="000000" aria-describedby="err-q">
+        </div>
+        <div>
+          <label for="last4">เบอร์โทร 4 ตัวท้าย</label>
+          <input type="text" id="last4" class="code-in" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="0000">
+        </div>
+        <div><button type="submit" class="btn primary" id="btnSearch" style="width:100%">ค้นหา</button></div>
+      </div>
+      <p class="err" id="err-q" role="alert"></p>
+      <p class="notice" data-cfg="ordersHelp">รหัสตรวจสอบอยู่ในหน้าสรุปหลังส่งคำสั่งซื้อ และในรูปใบยืนยันที่บันทึกไว้ หน้านี้ปิดบังเบอร์โทรเสมอ และไม่แสดงรายการของผู้อื่น</p>
+    </form>
+  </div>
+
+  <details class="fallback" id="fallback">
+    <summary>จำรหัสตรวจสอบไม่ได้</summary>
+    <div class="fb-body">
+      <p class="sub" style="margin:0 0 12px;color:var(--ink-soft);font-size:0.9375rem">
+        กรอกหมายเลขโทรศัพท์ที่ใช้สั่งซื้อให้ครบทุกหลัก ระบบจะแสดงคำสั่งซื้อของหมายเลขนั้น (ยังปิดบังเบอร์โทรเช่นเดิม)
+        หากยังหาไม่พบ โปรดติดต่อเจ้าหน้าที่พร้อมแจ้งชื่อและนามสกุล
+      </p>
+      <form id="phoneForm" novalidate>
+        <div class="fb-row">
+          <div><label for="phone">หมายเลขโทรศัพท์</label>
+            <input type="tel" id="phone" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="0812345678"></div>
+          <div><button type="submit" class="btn teal" style="width:100%">ค้นหาด้วยเบอร์โทร</button></div>
+        </div>
+        <p class="err" id="err-p" role="alert"></p>
+      </form>
+    </div>
+  </details>
+
+  <div class="sorts" id="sortBar" hidden>
+    <label for="sortBy" style="display:inline;font-weight:400;margin:0">เรียงตาม</label>
+    <select id="sortBy">
+      <option value="date">วันที่สั่งซื้อ</option>
+      <option value="no">เลขคำสั่งซื้อ</option>
+      <option value="total">ยอดรวม</option>
+      <option value="status">สถานะ</option>
+    </select>
+    <button type="button" class="btn sm" id="sortDir">↓ ใหม่ไปเก่า</button>
+    <span id="qcount"></span>
+  </div>
+
+  <div class="empty" id="emptyBox">
+    <strong>ยังไม่ได้ค้นหา</strong>
+    กรอกรหัสตรวจสอบ 6 หลักและเบอร์โทร 4 ตัวท้าย แล้วกดค้นหา
+  </div>
+
+  <ul class="rows" id="rows" hidden></ul>
+</main>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <div class="dlg-head"><h2 id="dlgTitle">รายละเอียดคำสั่งซื้อ</h2>
+    <button type="button" class="x" id="dlgClose" aria-label="ปิด">✕</button></div>
+  <div class="dlg-body" id="dlgBody"></div>
+  <div class="dlg-foot"><button type="button" class="btn" id="dlgClose2">ปิด</button></div>
+</dialog>
+
+<footer class="site-foot"><div>
+  <p><span data-cfg-if="contactPhone">หากข้อมูลไม่ถูกต้อง ติดต่องานกิจการนักศึกษา โทร <span class="ph" data-cfg="contactPhone">[ระบุเบอร์]</span></span></p>
+  <p><span data-cfg="pdpaNote">ข้อมูลส่วนบุคคลของท่านจะใช้ตามวัตถุประสงค์ที่ท่านให้ความยินยอมเท่านั้น</span></p>
+</div></footer>
+
+<script src="config.js"></script>
+<script src="site.js"></script>
+<script>
+  'use strict';
+  const $ = (s) => document.querySelector(s);
+  const demo = Site.demo;
+  $('#demoBanner').hidden = !demo;
+  $('#orderLink').href = Site.pages.order;
+
+  const DEMO_ORDERS = [
+    { no: 'ST69001', code: '482913', firstName: 'ณัฐพงศ์', lastName: 'จันทร์เพ็ญ', phoneMasked: '081-xxx-5678', last4: '5678',
+      dept: 'วิทยาการคอมพิวเตอร์', studentId: '2565010112', total: 820, transferDate: '2026-10-03', orderedAt: '2026-10-03',
+      status: 'approved', declineReason: '',
+      items: [{ name: 'เสื้อกีฬาคณะ', size: 'L', unitPrice: 320, qty: 2, amount: 640 }, { name: 'กระเป๋าผ้าคณะ', size: '', unitPrice: 180, qty: 1, amount: 180 }] },
+    { no: 'ST69004', code: '771204', firstName: 'ณัฐพงศ์', lastName: 'จันทร์เพ็ญ', phoneMasked: '081-xxx-5678', last4: '5678',
+      dept: 'วิทยาการคอมพิวเตอร์', studentId: '2565010112', total: 540, transferDate: '2026-10-07', orderedAt: '2026-10-07',
+      status: 'declined', declineReason: 'ยอดในสลิปไม่ตรงกับยอดรวม โอนมา 400 บาท แต่ยอดจริง 540 บาท กรุณาติดต่อเจ้าหน้าที่',
+      items: [{ name: 'เสื้อกีฬาคณะ', size: '2XL', unitPrice: 360, qty: 1, amount: 360 }, { name: 'เข็มขัดนักศึกษา', size: '', unitPrice: 180, qty: 1, amount: 180 }] }
+  ];
+
+  let TEXTS = {};
+  function statusLabel(s) {
+    return ({ pending: TEXTS.statusPending || 'รอตรวจสอบ',
+      approved: TEXTS.statusApproved || 'ตรวจสอบแล้ว',
+      declined: TEXTS.statusDeclined || 'การชำระเงินไม่สำเร็จ' })[s] || s;
+  }
+  const badge = (s) => '<span class="badge ' + s + '">' + Site.esc(statusLabel(s)) + '</span>';
+
+  (function loadConfig() {
+    if (demo) return;
+    const cached = Site.cacheGet('cfg');
+    if (cached) { TEXTS = cached.texts || {}; Site.applyPublicConfig(cached); }
+    Site.get('config').then((c) => {
+      TEXTS = c.texts || {};
+      Site.applyPublicConfig(c);
+      Site.cacheSet('cfg', { texts: c.texts, images: c.images });
+    }).catch(() => { /* ใช้ข้อความเดิมในหน้า */ });
+  })();
+
+  /* เหลือเฉพาะตัวเลขในช่องรหัสและเบอร์ 4 ตัวท้าย */
+  ['code', 'last4'].forEach((id) => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => {
+      el.value = el.value.replace(/\D/g, '').slice(0, id === 'code' ? 6 : 4);
+      setErr('q', '');
+    });
+  });
+
+  function setErr(which, msg) {
+    const el = document.getElementById('err-' + which);
+    if (el) el.textContent = msg;
+  }
+
+  let found = [], sortDesc = true;
+
+  function render() {
+    const by = $('#sortBy').value;
+    const list = found.slice().sort((a, b) => {
+      const k = by === 'no' ? String(a.no).localeCompare(String(b.no))
+        : by === 'total' ? (a.total - b.total)
+        : by === 'status' ? String(a.status).localeCompare(String(b.status))
+        : String(a.orderedAt).localeCompare(String(b.orderedAt));
+      return sortDesc ? -k : k;
+    });
+    $('#qcount').textContent = 'พบ ' + list.length + ' รายการ';
+    $('#sortBar').hidden = list.length < 2;
+    $('#emptyBox').hidden = list.length > 0;
+    $('#rows').hidden = list.length === 0;
+    $('#rows').innerHTML = list.map((o, i) =>
+      '<li class="row">' +
+        '<div><div class="ordno">' + Site.esc(o.no) + '</div><div class="when">สั่งซื้อ ' + Site.esc(Site.thaiDate(o.orderedAt)) + '</div></div>' +
+        '<div><div class="who-name">' + Site.esc(o.firstName + ' ' + o.lastName) + '</div><div class="mask">' + Site.esc(o.phoneMasked) + '</div></div>' +
+        '<div class="amt">' + Site.baht(o.total) + '<small>บาท</small></div>' +
+        '<div>' + badge(o.status) + '</div>' +
+        '<div><button type="button" class="btn sm teal" data-det="' + i + '">ดูรายละเอียด</button></div>' +
+        (o.status === 'declined' && o.declineReason
+          ? '<p class="row-note"><b>เหตุผล:</b> ' + Site.esc(o.declineReason) + '</p>' : '') +
+      '</li>').join('');
+    $('#rows').dataset.sorted = JSON.stringify(list.map((o) => o.no));
+    window.__sorted = list;
+  }
+
+  function showEmpty(title, body) {
+    found = [];
+    $('#rows').hidden = true;
+    $('#sortBar').hidden = true;
+    $('#emptyBox').hidden = false;
+    $('#emptyBox').innerHTML = '<strong>' + Site.esc(title) + '</strong>' + Site.esc(body);
+  }
+
+  async function search(fn, errBox, btn) {
+    const label = btn ? btn.textContent : '';
+    if (btn) { btn.disabled = true; btn.textContent = 'กำลังค้นหา…'; }
+    try {
+      const res = await fn();
+      found = res.orders || [];
+      setErr(errBox, '');
+      if (!found.length) showEmpty('ไม่พบคำสั่งซื้อ', 'โปรดตรวจข้อมูลที่กรอกอีกครั้ง');
+      else render();
+    } catch (err) {
+      found = [];
+      $('#rows').hidden = true;
+      $('#sortBar').hidden = true;
+      $('#emptyBox').hidden = false;
+      $('#emptyBox').innerHTML = '<strong>ไม่พบคำสั่งซื้อ</strong>โปรดตรวจข้อมูลที่กรอกอีกครั้ง';
+      setErr(errBox, err && err.message ? err.message : 'ค้นหาไม่สำเร็จ โปรดลองใหม่อีกครั้ง');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = label; }
+    }
+  }
+
+  $('#codeForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const code = $('#code').value.trim();
+    const last4 = $('#last4').value.trim();
+    if (code.length !== 6 || last4.length !== 4) {
+      setErr('q', 'โปรดกรอกรหัสตรวจสอบ 6 หลัก และเบอร์โทร 4 ตัวท้ายให้ครบ');
+      return;
+    }
+    search(async () => {
+      if (demo) {
+        const hit = DEMO_ORDERS.filter((o) => o.code === code && o.last4 === last4);
+        if (!hit.length) throw Site.error('NOT_FOUND', 'ไม่พบคำสั่งซื้อที่ตรงกัน โปรดตรวจรหัสตรวจสอบและเบอร์โทร 4 ตัวท้ายอีกครั้ง');
+        return { orders: hit };
+      }
+      return Site.post('lookup', { code: code, last4: last4 });
+    }, 'q', $('#btnSearch'));
+  });
+
+  $('#phoneForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const phone = $('#phone').value.replace(/\D/g, '');
+    if (phone.length < 9) { setErr('p', 'โปรดกรอกหมายเลขโทรศัพท์ให้ครบทุกหลัก'); return; }
+    search(async () => {
+      if (demo) {
+        const hit = DEMO_ORDERS.filter((o) => phone.slice(-4) === o.last4);
+        if (!hit.length) throw Site.error('NOT_FOUND', 'ไม่พบคำสั่งซื้อของหมายเลขนี้');
+        return { orders: hit };
+      }
+      return Site.post('lookup', { mode: 'phone', phone: phone });
+    }, 'p', e.submitter);
+  });
+
+  $('#sortBy').addEventListener('change', render);
+  $('#sortDir').addEventListener('click', (e) => {
+    sortDesc = !sortDesc;
+    e.target.textContent = sortDesc ? '↓ ใหม่ไปเก่า' : '↑ เก่าไปใหม่';
+    render();
+  });
+
+  /* รายละเอียดคำสั่งซื้อ */
+  const dlg = $('#dlg');
+  document.addEventListener('click', (e) => {
+    const i = e.target.dataset && e.target.dataset.det;
+    if (i === undefined) return;
+    const o = (window.__sorted || [])[Number(i)];
+    if (!o) return;
+    $('#dlgTitle').textContent = 'คำสั่งซื้อ ' + o.no;
+    $('#dlgBody').innerHTML =
+      '<table class="itab"><thead><tr><th>สินค้า</th><th>ขนาด</th><th>จำนวน</th><th>รวม</th></tr></thead><tbody>' +
+      (o.items || []).map((it) => '<tr><td>' + Site.esc(it.name) + '</td><td>' + Site.esc(it.size || '—') +
+        '</td><td>' + it.qty + '</td><td>' + Site.baht(it.amount) + '</td></tr>').join('') +
+      '<tr class="sum"><td colspan="3">ยอดรวม</td><td>' + Site.baht(o.total) + '</td></tr></tbody></table>' +
+      '<dl class="dl">' +
+      '<dt>สาขาวิชา</dt><dd>' + Site.esc(o.dept) + '</dd>' +
+      '<dt>รหัสนักศึกษา</dt><dd>' + Site.esc(o.studentId || 'ไม่ได้ระบุ') + '</dd>' +
+      '<dt>เบอร์โทรศัพท์</dt><dd class="mask">' + Site.esc(o.phoneMasked) + '</dd>' +
+      '<dt>วันที่โอนเงิน</dt><dd>' + Site.esc(Site.thaiDate(o.transferDate)) + '</dd>' +
+      '<dt>วันที่สั่งซื้อ</dt><dd>' + Site.esc(Site.thaiDate(o.orderedAt)) + '</dd>' +
+      '<dt>สถานะ</dt><dd>' + badge(o.status) + '</dd></dl>' +
+      (o.status === 'declined' && o.declineReason
+        ? '<p class="notice bad"><b>เหตุผล:</b> ' + Site.esc(o.declineReason) + '</p>' : '');
+    dlg.showModal();
+  });
+  $('#dlgClose').addEventListener('click', () => dlg.close());
+  $('#dlgClose2').addEventListener('click', () => dlg.close());
+</script>
+</body>
+</html>

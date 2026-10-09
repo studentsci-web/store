@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>สั่งซื้ออุปกรณ์การเรียน คณะวิทยาศาสตร์และเทคโนโลยี มทร.รัตนโกสินทร์</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- โหลดฟอนต์แบบไม่ขวางการแสดงผล: หน้าเว็บขึ้นก่อน แล้วฟอนต์ค่อยมาแทน -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Noto+Serif+Thai:wght@600;700&display=swap" media="print" onload="this.media='all';this.onload=null">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Noto+Serif+Thai:wght@600;700&display=swap"></noscript>
+<style>
+  :root {
+    --ink: #12273b; --ink-soft: #4a5d6e; --teal: #0f6b66; --teal-dark: #0a524e;
+    --mint: #e4f1ee; --paper: #f5f8f7; --card: #ffffff; --line: #cfdcd8;
+    --amber: #f2b632; --amber-soft: #fff1cc; --danger: #b3261e; --danger-soft: #fde8e6;
+    --mark: 46px;
+    --serif: "Noto Serif Thai", "Tahoma", serif;
+    --sans: "IBM Plex Sans Thai", "Tahoma", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 1.0625rem; line-height: 1.75; }
+  img, svg { max-width: 100%; }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+  [hidden] { display: none !important; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  .ph { background: var(--amber-soft); box-shadow: 0 -2px 0 var(--amber-soft); border-radius: 3px; }
+  h1, h2, h3 { font-family: var(--serif); text-wrap: balance; margin: 0; }
+
+  .demo-banner { background: var(--amber-soft); border-bottom: 1px solid var(--amber); padding: 10px 16px; font-size: 0.9375rem; line-height: 1.55; text-align: center; }
+
+  .site-head { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; max-width: 1080px; margin: 0 auto; padding: 18px 16px 6px; }
+  .mark { flex: none; width: var(--mark); height: var(--mark); border-radius: 12px; background: var(--teal); color: #fff; display: grid; place-items: center; overflow: hidden; }
+  .mark svg { width: 28px; height: 28px; }
+  .mark.has-img { background: transparent; }
+  .mark img { width: 100%; height: 100%; object-fit: contain; }
+  .org { flex: 1 1 14rem; min-width: 0; margin: 0; line-height: 1.45; font-size: 0.9375rem; color: var(--ink-soft); }
+  .org strong { display: block; color: var(--ink); font-weight: 600; font-size: 1rem; }
+  @media (min-width: 900px) { .org strong { font-size: 1.25rem; } .org { font-size: 1rem; } }
+  .head-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-left: auto; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
+    min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid var(--ink); background: #fff; color: var(--ink);
+    font-size: 0.9375rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: background-color .15s, color .15s, border-color .15s; }
+  .btn:hover:not(:disabled) { background: var(--ink); color: #fff; }
+  .btn:disabled { border-color: var(--line); color: #8a9aa6; background: #f3f6f5; cursor: not-allowed; }
+  .btn.primary { background: var(--teal); border-color: var(--teal); color: #fff; font-weight: 600; }
+  .btn.primary:hover:not(:disabled) { background: var(--teal-dark); border-color: var(--teal-dark); }
+  .btn.teal { border-color: var(--teal); color: var(--teal-dark); }
+  .btn.teal:hover:not(:disabled) { background: var(--teal); color: #fff; }
+  .btn.sm { min-height: 40px; padding: 0 14px; font-size: 0.9063rem; }
+
+  .layout { max-width: 1080px; margin: 0 auto; padding: 18px 16px 110px; display: grid; gap: 28px; }
+  @media (min-width: 900px) {
+    .layout { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px; padding-top: 30px; padding-bottom: 56px; align-items: start; }
+    .intro { position: sticky; top: 24px; }
+  }
+  .logo-band { grid-column: 1 / -1; display: flex; justify-content: center; }
+  .logo-slot { flex: none; width: calc(var(--mark) * 4); height: calc(var(--mark) * 4); max-width: 100%;
+    display: grid; place-content: center; gap: 2px; text-align: center; padding: 8px;
+    border: 2px dashed var(--amber); border-radius: 16px; background: var(--amber-soft); color: var(--ink-soft); font-size: 0.9375rem; line-height: 1.5; }
+  .logo-slot small { font-size: 0.8125rem; }
+  .logo-slot.has-logo { border: 0; background: transparent; border-radius: 0; padding: 0; }
+  .logo-slot img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+  .intro h1 { font-weight: 700; font-size: clamp(1.9rem, 5.2vw, 2.7rem); line-height: 1.4; margin: 8px 0 14px; }
+  .intro .lead { margin: 0 0 22px; max-width: 34em; color: var(--ink-soft); }
+  .uses { list-style: none; margin: 0 0 22px; padding: 0; display: grid; gap: 10px; }
+  .uses li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; }
+  .uses svg { width: 22px; height: 22px; margin-top: 6px; color: var(--teal); }
+  .trust { border-left: 4px solid var(--teal); background: var(--mint); padding: 12px 16px; border-radius: 0 10px 10px 0; font-size: 0.9688rem; line-height: 1.65; margin: 0; }
+
+  /* บนมือถือไม่ต้องมีการ์ดสรุป เพราะมีแถบยอดรวมค้างอยู่ล่างจอแล้ว */
+  @media (max-width: 899px) { .summary { display: none; } }
+  .summary { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin-top: 22px; }
+  .summary h2 { font-family: var(--sans); font-size: 1.0625rem; font-weight: 600; }
+  .sumlist { list-style: none; padding: 0; margin: 12px 0; display: grid; gap: 8px; font-size: 0.9375rem; }
+  .sumlist li { display: flex; gap: 10px; justify-content: space-between; align-items: baseline; }
+  .sumlist span:last-child { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .sumlist .none { color: var(--ink-soft); justify-content: flex-start; }
+  .total { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--line); padding-top: 12px; gap: 12px; }
+  .total .n { font-family: var(--serif); font-weight: 700; font-size: 2.1rem; line-height: 1.3; font-variant-numeric: tabular-nums; }
+  .total .u { font-size: 1rem; margin-left: 4px; font-weight: 500; }
+
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px 18px 22px; }
+  .step + .step { margin-top: 16px; }
+  .step-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .step-no { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--teal); color: #fff; font-weight: 600; display: grid; place-items: center; line-height: 1; font-family: var(--sans); }
+  .step-head h2 { font-weight: 600; font-size: 1.25rem; line-height: 1.5; }
+  .hint { margin: 0 0 12px; font-size: 0.9375rem; color: var(--ink-soft); line-height: 1.6; }
+
+  .plist { display: grid; gap: 12px; }
+  .prod { border: 1.5px solid var(--line); border-radius: 12px; padding: 14px; display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 14px; }
+  .prod.picked { border-color: var(--teal); background: #fbfdfc; }
+  .pthumb { width: 88px; aspect-ratio: 1; border-radius: 10px; background: var(--mint); display: grid; place-items: center; overflow: hidden; color: var(--teal-dark); font-size: 0.75rem; text-align: center; padding: 6px; line-height: 1.4; max-width: 100%; }
+  .pthumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .prod h3 { font-family: var(--sans); font-size: 1.0625rem; font-weight: 600; line-height: 1.5; }
+  .prod .desc { font-size: 0.9063rem; color: var(--ink-soft); margin: 2px 0 10px; line-height: 1.55; }
+  .prow { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .sizesel { max-width: 200px; min-height: 44px; }
+  .unit { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .stepper { display: inline-flex; align-items: center; border: 1.5px solid var(--line); border-radius: 999px; overflow: hidden; background: #fff; }
+  .stepper button { width: 44px; height: 44px; border: 0; background: transparent; cursor: pointer; font-size: 1.3rem; color: var(--teal-dark); line-height: 1; }
+  .stepper button:disabled { color: #a9bcb8; cursor: not-allowed; }
+  .stepper input { width: 52px; border: 0; text-align: center; background: transparent; padding: 0; min-height: 44px; font-variant-numeric: tabular-nums; font-weight: 600; -moz-appearance: textfield; }
+  .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .linetot { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--teal-dark); font-weight: 600; }
+  .empty-products { border: 1px dashed var(--line); border-radius: 12px; padding: 24px; text-align: center; color: var(--ink-soft); }
+
+  .field { margin-bottom: 16px; }
+  .field:last-child { margin-bottom: 0; }
+  label, .label { display: block; font-weight: 500; margin-bottom: 4px; }
+  .opt { font-weight: 400; color: var(--ink-soft); font-size: 0.9375rem; }
+  .two { display: grid; gap: 16px; }
+  @media (min-width: 620px) { .two { grid-template-columns: 1fr 1fr; } }
+  input[type="text"], input[type="tel"], input[type="date"], select, textarea {
+    width: 100%; min-height: 50px; padding: 10px 14px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; }
+  input:hover, textarea:hover, select:hover { border-color: #9fb6b0; }
+  [aria-invalid="true"] { border-color: var(--danger) !important; }
+  .err { margin: 4px 0 0; color: var(--danger); font-size: 0.9375rem; line-height: 1.5; }
+  .err:empty { display: none; }
+  .check { display: grid; grid-template-columns: 24px 1fr; gap: 10px; align-items: start; font-weight: 400; margin: 0; cursor: pointer; }
+  .check input { width: 22px; height: 22px; margin: 5px 0 0; accent-color: var(--teal); }
+  .check + .err { margin-left: 34px; }
+  a { color: var(--teal-dark); }
+
+  .pay-total { background: var(--mint); border-radius: 12px; padding: 14px 18px; margin-bottom: 16px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .pay-total .t { color: var(--ink-soft); font-size: 0.9375rem; }
+  .pay-total .n { font-family: var(--serif); font-weight: 700; font-size: 2.2rem; line-height: 1.3; font-variant-numeric: tabular-nums; }
+  .pay-total .u { font-size: 1rem; margin-left: 4px; font-weight: 500; }
+  .account { width: 100%; margin: 0; display: grid; gap: 12px; padding: 16px; border: 1.5px solid var(--line); border-radius: 12px; background: #fbfdfc; }
+  .account div { display: grid; grid-template-columns: 7.2em 1fr; gap: 8px; align-items: center; }
+  .account dt { color: var(--ink-soft); font-size: 0.9375rem; }
+  .account dd { margin: 0; font-weight: 500; word-break: break-word; }
+  .acc-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+  .slip-btn { display: grid; place-items: center; text-align: center; gap: 2px; min-height: 92px; padding: 14px; border: 2px dashed var(--teal); border-radius: 12px; background: #fbfdfc; cursor: pointer; font-weight: 500; color: var(--teal-dark); }
+  .slip-btn small { font-weight: 400; color: var(--ink-soft); font-size: 0.875rem; }
+  .slip-btn:hover { background: var(--mint); }
+  .slip-input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+  .slip-input:focus-visible + .slip-btn { outline: 3px solid var(--amber); outline-offset: 2px; }
+  .slip-prev { display: flex; align-items: center; gap: 14px; margin-top: 12px; padding: 10px; border: 1px solid var(--line); border-radius: 12px; }
+  .slip-prev img { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; flex: none; background: var(--mint); }
+  .slip-prev .name { flex: 1; min-width: 0; font-size: 0.9375rem; line-height: 1.45; overflow-wrap: anywhere; }
+  .linkbtn { background: none; border: 0; color: var(--danger); font-weight: 500; cursor: pointer; padding: 8px; min-height: 44px; }
+
+  .submit { width: 100%; min-height: 56px; margin-top: 20px; border: 0; border-radius: 12px; background: var(--teal); color: #fff; font-weight: 600; font-size: 1.125rem; cursor: pointer; }
+  .submit:hover { background: var(--teal-dark); }
+  .submit:disabled { background: #7aa8a4; cursor: progress; }
+  .form-error { margin: 12px 0 0; color: var(--danger); font-size: 0.9688rem; line-height: 1.6; }
+  .form-error:empty { display: none; }
+
+  .mobar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; background: #fff; border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); display: flex; gap: 12px; align-items: center; box-shadow: 0 -4px 16px rgba(18,39,59,.08); }
+  @media (min-width: 900px) { .mobar { display: none; } }
+  .mobar .n { font-size: 0.8125rem; color: var(--ink-soft); line-height: 1.4; }
+  .mobar .t { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; line-height: 1.3; font-variant-numeric: tabular-nums; }
+  .mobar .btn { margin-left: auto; }
+
+  /* หน้าขอบคุณ */
+  .done { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 28px 22px; }
+  .done h2 { font-size: 1.6rem; line-height: 1.5; margin-bottom: 10px; }
+  .done h2:focus { outline: none; }
+  .codebox { background: var(--mint); border: 1.5px solid var(--teal); border-radius: 14px; padding: 18px; text-align: center; margin: 18px 0; }
+  .codebox .cap { font-size: 0.9375rem; color: var(--ink-soft); margin: 0; }
+  .codebox .code { font-family: var(--serif); font-weight: 700; font-size: clamp(2.4rem, 13vw, 3.4rem); letter-spacing: .14em; color: var(--teal-dark); line-height: 1.2; margin: 4px 0 2px; }
+  .codebox .orderno { font-size: 0.9375rem; color: var(--ink-soft); margin: 0 0 14px; }
+  .codebox .orderno b { color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: .03em; }
+  .codebox .acts { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .howto { border: 1.5px solid var(--line); border-radius: 12px; padding: 16px 18px; background: #fbfdfc; }
+  .howto h3 { font-family: var(--sans); font-size: 1.0625rem; font-weight: 600; margin-bottom: 8px; }
+  .howto ol { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; font-size: 0.9688rem; }
+  .howto .warn { margin: 12px 0 0; padding: 10px 14px; border-radius: 10px; background: var(--amber-soft); font-size: 0.9375rem; line-height: 1.6; }
+  .capture { margin-top: 16px; border: 1px solid var(--line); border-radius: 12px; padding: 10px; background: var(--paper); text-align: center; }
+  .capture img { display: block; margin: 0 auto; border-radius: 8px; max-width: 340px; width: 100%; }
+  .capture p { margin: 8px 0 0; font-size: 0.875rem; color: var(--ink-soft); }
+  .done .foot-acts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+
+  .site-foot { border-top: 1px solid var(--line); background: #fff; padding: 24px 16px 32px; font-size: 0.9375rem; color: var(--ink-soft); line-height: 1.7; }
+  .site-foot > div { max-width: 1080px; margin: 0 auto; }
+  .site-foot p { margin: 0 0 6px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+
+<div class="demo-banner" id="demoBanner" role="note" hidden>
+  โหมดตัวอย่าง: ยังไม่ได้ใส่ <code>apiUrl</code> ใน config.js ข้อมูลที่กรอกจะไม่ถูกส่งไปที่ใด และสินค้าที่เห็นเป็นข้อมูลสมมติ
+</div>
+
+<header class="site-head">
+  <div class="mark" aria-hidden="true">
+    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4h8M14 4v8l-6.2 11.2A3 3 0 0 0 10.4 27.5h11.2a3 3 0 0 0 2.6-4.3L18 12V4"/><path d="M10.5 20h11"/>
+    </svg>
+  </div>
+  <p class="org">
+    <strong data-cfg="orgLine1">งานกิจการนักศึกษา คณะวิทยาศาสตร์และเทคโนโลยี</strong>
+    <span data-cfg="orgLine2">มหาวิทยาลัยเทคโนโลยีราชมงคลรัตนโกสินทร์</span>
+  </p>
+  <div class="head-actions">
+    <a class="btn teal" id="ordersLink" href="orders.html">ตรวจสอบคำสั่งซื้อ</a>
+    <a class="btn" id="adminLink" href="admin.html">สำหรับเจ้าหน้าที่</a>
+  </div>
+</header>
+
+<main class="layout" id="main">
+  <div class="logo-band">
+    <div class="logo-slot" id="logoSlot" role="img" aria-label="พื้นที่สำหรับโลโก้มหาวิทยาลัย (ยังไม่ได้ใส่โลโก้)">
+      <span>พื้นที่ใส่โลโก้<br>มหาวิทยาลัย</span><small>184 × 184 px</small>
+    </div>
+  </div>
+
+  <section class="intro" aria-labelledby="title">
+    <h1 id="title" data-cfg="heroTitle">สั่งซื้ออุปกรณ์การเรียน</h1>
+    <p class="lead" data-cfg="heroLead">สำหรับนักศึกษาคณะวิทยาศาสตร์และเทคโนโลยี เลือกรายการที่ต้องการ โอนเงินตามยอดรวม แล้วแนบสลิป เจ้าหน้าที่จะตรวจสอบและแจ้งผลที่หน้าตรวจสอบคำสั่งซื้อ</p>
+    <ul class="uses">
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span data-cfg="bullet1">เลือกสินค้าและขนาด ระบบคิดยอดรวมให้ทันที</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span data-cfg="bullet2">เจ้าหน้าที่ตรวจสลิปทุกรายการก่อนยืนยัน</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span data-cfg="bullet3">ตรวจสถานะเองได้ด้วยรหัสตรวจสอบ ไม่ต้องรออีเมล</span></li>
+    </ul>
+    <p class="trust" data-cfg="trustNote">โปรดโอนเข้าบัญชีของคณะตามที่แสดงในขั้นตอนที่ 3 เท่านั้น และตรวจชื่อบัญชีให้ถูกต้องก่อนยืนยันการโอนทุกครั้ง</p>
+
+    <aside class="summary" id="summaryCard" aria-live="polite">
+      <h2>สรุปรายการที่เลือก</h2>
+      <ul class="sumlist" id="sumlist"><li class="none">ยังไม่ได้เลือกสินค้า</li></ul>
+      <div class="total"><span>ยอดรวม</span><span><span class="n" id="sumTotal">0</span><span class="u">บาท</span></span></div>
+      <p class="hint" style="margin:10px 0 0">ระบบจะคำนวณยอดนี้ใหม่ที่หลังบ้านจากราคาในฐานข้อมูลอีกครั้งก่อนบันทึก</p>
+    </aside>
+  </section>
+
+  <div>
+    <form id="orderForm" novalidate>
+      <section class="step" aria-labelledby="s1">
+        <div class="step-head"><span class="step-no" aria-hidden="true">1</span><h2 id="s1">เลือกสินค้า</h2></div>
+        <p class="hint">ปรับจำนวนด้วยปุ่ม + และ − สินค้าที่มีหลายขนาดให้เลือกขนาดก่อน</p>
+        <div class="plist" id="plist"><div class="empty-products">กำลังโหลดรายการสินค้า…</div></div>
+        <p class="err" id="err-items" role="alert"></p>
+      </section>
+
+      <section class="step" aria-labelledby="s2">
+        <div class="step-head"><span class="step-no" aria-hidden="true">2</span><h2 id="s2">ข้อมูลนักศึกษา</h2></div>
+        <div class="two">
+          <div class="field">
+            <label for="dept" data-cfg="labelDept">สาขาวิชา</label>
+            <select id="dept" aria-describedby="err-dept"><option value="">— เลือกสาขาวิชา —</option></select>
+            <p class="err" id="err-dept" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="studentId"><span data-cfg="labelStudentId">รหัสนักศึกษา</span> <span class="opt">(ถ้ามี)</span></label>
+            <input type="text" id="studentId" autocomplete="off" inputmode="text" placeholder="เช่น 2565010112">
+          </div>
+        </div>
+        <div class="two">
+          <div class="field"><label for="firstName" data-cfg="labelFirstName">ชื่อ</label>
+            <input type="text" id="firstName" autocomplete="given-name" aria-describedby="err-firstName">
+            <p class="err" id="err-firstName" role="alert"></p></div>
+          <div class="field"><label for="lastName" data-cfg="labelLastName">นามสกุล</label>
+            <input type="text" id="lastName" autocomplete="family-name" aria-describedby="err-lastName">
+            <p class="err" id="err-lastName" role="alert"></p></div>
+        </div>
+        <div class="field" style="max-width:320px">
+          <label for="phone" data-cfg="labelPhone">หมายเลขโทรศัพท์</label>
+          <input type="tel" id="phone" inputmode="tel" maxlength="30" autocomplete="tel" placeholder="08x-xxx-xxxx" aria-describedby="phone-hint err-phone">
+          <p class="hint" id="phone-hint" style="margin:4px 0 0" data-cfg="phoneHint">ใช้ติดต่อกลับ และใช้คู่กับรหัสตรวจสอบเพื่อดูสถานะคำสั่งซื้อ</p>
+          <p class="err" id="err-phone" role="alert"></p>
+        </div>
+        <div class="field">
+          <label class="check"><input type="checkbox" id="consent" aria-describedby="err-consent">
+            <span><span data-cfg="consentText">ข้าพเจ้ายินยอมให้คณะเก็บรวบรวมและใช้ข้อมูลส่วนบุคคลข้างต้น เพื่อดำเนินการเกี่ยวกับคำสั่งซื้อนี้</span>
+              <a data-cfg-href="pdpaUrl" hidden target="_blank" rel="noopener">อ่านนโยบายคุ้มครองข้อมูลส่วนบุคคล</a></span></label>
+          <p class="err" id="err-consent" role="alert"></p>
+        </div>
+      </section>
+
+      <section class="step" aria-labelledby="s3">
+        <div class="step-head"><span class="step-no" aria-hidden="true">3</span><h2 id="s3">โอนเงินและแนบสลิป</h2></div>
+        <div class="pay-total" aria-live="polite">
+          <span class="t">ยอดเงินที่ต้องโอน</span>
+          <span><span class="n" id="payTotal">–</span><span class="u">บาท</span></span>
+        </div>
+        <dl class="account">
+          <div><dt>ธนาคาร</dt><dd class="ph" data-cfg="bankName">[ระบุชื่อธนาคาร]</dd></div>
+          <div><dt>ชื่อบัญชี</dt><dd class="ph" data-cfg="accountName">[ระบุชื่อบัญชี]</dd></div>
+          <div><dt>เลขที่บัญชี</dt><dd class="acc-row"><span id="accountNumber" class="ph" data-cfg="accountNumber">[ระบุเลขบัญชี]</span>
+            <button type="button" class="btn teal sm" id="copyAcct">คัดลอกเลขที่บัญชี</button></dd></div>
+        </dl>
+        <p class="hint" style="margin:14px 0 0" data-cfg="transferHint">โปรดโอนตามยอดรวมให้ตรงทุกบาท เพื่อให้เจ้าหน้าที่ตรวจสอบได้เร็ว</p>
+
+        <div class="field" style="margin-top:16px; max-width:280px">
+          <label for="transferDate">วันที่โอนเงิน</label>
+          <input type="date" id="transferDate" aria-describedby="date-hint err-transferDate">
+          <p class="hint" id="date-hint" style="margin:4px 0 0"></p>
+          <p class="err" id="err-transferDate" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <span class="sr-only" id="slipLabel">สลิปการโอนเงิน</span>
+          <input class="slip-input" type="file" id="slip" accept="image/jpeg,image/png,image/webp" aria-labelledby="slipLabel" aria-describedby="err-slip">
+          <label class="slip-btn" for="slip">คลิกหรือแตะเพื่อแนบสลิปการโอนเงิน
+            <small>ไฟล์ JPG, PNG หรือ WebP ระบบย่อรูปให้อัตโนมัติก่อนส่ง</small></label>
+          <div class="slip-prev" id="slipPrev" hidden>
+            <img id="slipImg" alt="ตัวอย่างสลิปที่เลือก">
+            <span class="name" id="slipName"></span>
+            <button type="button" class="linkbtn" id="slipRemove">เปลี่ยนไฟล์</button>
+          </div>
+          <p class="err" id="err-slip" role="alert"></p>
+        </div>
+
+        <div class="hp" aria-hidden="true"><label>เว็บไซต์ <input type="text" id="website" tabindex="-1" autocomplete="off"></label></div>
+
+        <button type="submit" class="submit" id="submitBtn">ส่งคำสั่งซื้อ</button>
+        <p class="form-error" id="formError" role="alert"></p>
+      </section>
+    </form>
+
+    <!-- หน้าสรุปหลังส่งคำสั่งซื้อ -->
+    <section class="done" id="doneView" hidden aria-labelledby="doneTitle">
+      <h2 id="doneTitle" tabindex="-1" data-cfg="thankTitle">คณะได้รับคำสั่งซื้อของคุณแล้ว</h2>
+      <p data-cfg="thankBody">เจ้าหน้าที่จะตรวจสอบหลักฐานการโอนเงินและอัปเดตสถานะที่หน้าตรวจสอบคำสั่งซื้อ
+        <span data-cfg-if="reviewDays">โดยใช้เวลาประมาณ <span data-cfg="reviewDays">1–2</span> วันทำการ</span></p>
+
+      <div class="codebox">
+        <p class="cap">รหัสตรวจสอบของคุณ</p>
+        <div class="code" id="doneCode">000000</div>
+        <p class="orderno">เลขคำสั่งซื้อ <b id="doneNo">—</b> · ยอดรวม <b id="doneTotal">0</b> บาท</p>
+        <div class="acts">
+          <button type="button" class="btn teal" id="copyCode">คัดลอกรหัส</button>
+          <button type="button" class="btn teal" id="saveImg">บันทึกเป็นรูป</button>
+        </div>
+      </div>
+
+      <div class="howto">
+        <h3>วิธีตรวจสอบสถานะคำสั่งซื้อ</h3>
+        <ol>
+          <li>เปิดหน้า <a id="howtoLink" href="orders.html">ตรวจสอบคำสั่งซื้อ</a></li>
+          <li>กรอก <b>รหัสตรวจสอบ 6 หลัก</b> ที่แสดงด้านบน</li>
+          <li>กรอก <b>เบอร์โทรศัพท์ 4 ตัวท้าย</b> ที่กรอกไว้ตอนสั่งซื้อ (<span id="doneLast4">xxxx</span>)</li>
+          <li>กดค้นหา จะเห็นสถานะ รายการสินค้า และยอดรวมของคุณ</li>
+        </ol>
+        <p class="warn"><b>เก็บรหัสนี้ไว้ให้ดี</b> ระบบไม่ส่งอีเมลและไม่แสดงรหัสนี้ซ้ำอีก ถ้าทำหาย ให้ติดต่อเจ้าหน้าที่พร้อมแจ้งชื่อและเบอร์โทรที่ใช้สั่งซื้อ</p>
+      </div>
+
+      <div class="capture" id="capture" hidden>
+        <img id="captureImg" alt="สลิปยืนยันคำสั่งซื้อสำหรับบันทึกเก็บไว้">
+        <p id="captureNote">กดค้างที่รูปแล้วเลือกบันทึกรูปภาพ</p>
+      </div>
+
+      <div class="foot-acts">
+        <a class="btn primary" id="doneOrdersLink" href="orders.html">ไปหน้าตรวจสอบคำสั่งซื้อ</a>
+        <button type="button" class="btn" id="againBtn">สั่งซื้อรายการใหม่</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="mobar" id="mobar">
+  <div><div class="n" id="mobarN">ยังไม่ได้เลือกสินค้า</div><div class="t"><span id="mobarT">0</span> บาท</div></div>
+  <button type="button" class="btn primary" id="mobarBtn">ส่งคำสั่งซื้อ</button>
+</div>
+
+<footer class="site-foot"><div>
+  <p><strong><span data-cfg="orgLine1">งานกิจการนักศึกษา คณะวิทยาศาสตร์และเทคโนโลยี</span> <span data-cfg="orgLine2">มหาวิทยาลัยเทคโนโลยีราชมงคลรัตนโกสินทร์</span></strong></p>
+  <p><span data-cfg-if="contactPhone">สอบถามเพิ่มเติม โทร <span class="ph" data-cfg="contactPhone">[ระบุเบอร์]</span></span>
+     <span data-cfg-if="contactEmail">อีเมล <span class="ph" data-cfg="contactEmail">[ระบุอีเมล]</span></span></p>
+  <p><span data-cfg="pdpaNote">ข้อมูลส่วนบุคคลของท่านจะใช้ตามวัตถุประสงค์ที่ท่านให้ความยินยอมเท่านั้น</span>
+     <a data-cfg-href="pdpaUrl" hidden target="_blank" rel="noopener">อ่านนโยบายคุ้มครองข้อมูลส่วนบุคคล</a></p>
+</div></footer>
+
+<script src="config.js"></script>
+<script src="site.js"></script>
+<script>
+  'use strict';
+  const $ = (s) => document.querySelector(s);
+  const demo = Site.demo;
+  $('#demoBanner').hidden = !demo;
+  $('#ordersLink').href = Site.pages.orders;
+  $('#doneOrdersLink').href = Site.pages.orders;
+  $('#howtoLink').href = Site.pages.orders;
+  $('#adminLink').href = Site.pages.admin;
+
+  /* สินค้าตัวอย่างสำหรับโหมดตัวอย่าง (ของจริงมาจากเมนูจัดการสินค้า) */
+  const DEMO_SHOP = {
+    texts: {}, images: {},
+    depts: ['วิทยาการคอมพิวเตอร์', 'เทคโนโลยีสารสนเทศ', 'เคมี', 'ชีววิทยา', 'ฟิสิกส์ประยุกต์'],
+    products: [
+      { id: 'P001', name: 'กระเป๋าผ้าคณะ', detail: 'ผ้าแคนวาส สกรีนตราคณะ', price: 250, sizes: [], minPrice: 250, maxPrice: 250, image: '' },
+      { id: 'P002', name: 'เข็มขัดนักศึกษา', detail: 'หัวเข็มขัดตรามหาวิทยาลัย', price: 180, sizes: [], minPrice: 180, maxPrice: 180, image: '' },
+      { id: 'P003', name: 'เสื้อกีฬาคณะ', detail: 'ผ้าไมโครโพลีเอสเตอร์ สีกรมท่า ปักตราคณะ', price: 320, minPrice: 320, maxPrice: 360, image: '',
+        sizes: [{ name: 'S', price: 320 }, { name: 'M', price: 320 }, { name: 'L', price: 320 }, { name: 'XL', price: 340 }, { name: '2XL', price: 360 }] },
+      { id: 'P004', name: 'กางเกงวอร์มคณะ', detail: 'ผ้าวอร์มอย่างดี ขายาว มีกระเป๋าข้าง', price: 420, minPrice: 420, maxPrice: 420, image: '',
+        sizes: [{ name: 'S', price: 420 }, { name: 'M', price: 420 }, { name: 'L', price: 420 }, { name: 'XL', price: 420 }] }
+    ]
+  };
+
+  let SHOP = { texts: {}, images: {}, depts: [], products: [] };
+  const cart = {};   // productId -> { qty, size }
+
+  function applyShop(shop) {
+    SHOP = shop;
+    Site.applyPublicConfig(shop);
+    const sel = $('#dept');
+    const keep = sel.value;
+    sel.replaceChildren(new Option('— เลือกสาขาวิชา —', ''));
+    (shop.depts || []).forEach((d) => sel.add(new Option(d, d)));
+    if (keep) sel.value = keep;
+    renderProducts();
+  }
+
+  function renderProducts() {
+    const list = SHOP.products || [];
+    if (!list.length) {
+      $('#plist').innerHTML = '<div class="empty-products">ขณะนี้ยังไม่มีสินค้าเปิดจำหน่าย โปรดติดต่อเจ้าหน้าที่</div>';
+      return;
+    }
+    $('#plist').innerHTML = list.map((p) => {
+      if (!cart[p.id]) cart[p.id] = { qty: 0, size: p.sizes && p.sizes.length ? p.sizes[0].name : '' };
+      const c = cart[p.id];
+      const img = Site.safeImg(p.image);
+      return '<div class="prod" id="prod-' + Site.esc(p.id) + '">' +
+        '<div class="pthumb">' + (img ? '<img src="' + img + '" alt="">' : 'รูปสินค้า') + '</div>' +
+        '<div style="min-width:0">' +
+          '<h3>' + Site.esc(p.name) + '</h3>' +
+          (p.detail ? '<p class="desc">' + Site.esc(p.detail) + '</p>' : '') +
+          '<div class="prow">' +
+            (p.sizes && p.sizes.length
+              ? '<select class="sizesel" data-size="' + Site.esc(p.id) + '" aria-label="ขนาดของ ' + Site.esc(p.name) + '">' +
+                p.sizes.map((s) => '<option value="' + Site.esc(s.name) + '"' + (s.name === c.size ? ' selected' : '') + '>ไซส์ ' + Site.esc(s.name) + ' · ' + Site.baht(s.price) + ' บาท</option>').join('') +
+                '</select>'
+              : '<span class="unit">' + Site.baht(p.price) + ' บาท</span>') +
+            '<span class="stepper">' +
+              '<button type="button" data-step="' + Site.esc(p.id) + '" data-d="-1" aria-label="ลดจำนวน">−</button>' +
+              '<input type="number" min="0" max="99" value="' + c.qty + '" data-qty="' + Site.esc(p.id) + '" aria-label="จำนวน ' + Site.esc(p.name) + '">' +
+              '<button type="button" data-step="' + Site.esc(p.id) + '" data-d="1" aria-label="เพิ่มจำนวน">+</button>' +
+            '</span>' +
+            '<span class="linetot" data-line="' + Site.esc(p.id) + '"></span>' +
+          '</div></div></div>';
+    }).join('');
+    recalc();
+  }
+
+  function unitPrice(p, size) {
+    if (!p.sizes || !p.sizes.length) return Number(p.price) || 0;
+    const hit = p.sizes.find((s) => s.name === size) || p.sizes[0];
+    return Number(hit.price) || 0;
+  }
+
+  function recalc() {
+    let total = 0, pieces = 0;
+    const lines = [];
+    (SHOP.products || []).forEach((p) => {
+      const c = cart[p.id] || { qty: 0 };
+      const el = document.querySelector('[data-line="' + CSS.escape(p.id) + '"]');
+      const box = document.getElementById('prod-' + p.id);
+      if (!c.qty) { if (el) el.textContent = ''; if (box) box.classList.remove('picked'); return; }
+      const sub = unitPrice(p, c.size) * c.qty;
+      total += sub; pieces += c.qty;
+      lines.push({ label: p.name + (p.sizes && p.sizes.length ? ' ไซส์ ' + c.size : ''), qty: c.qty, sub: sub });
+      if (el) el.textContent = Site.baht(sub) + ' บาท';
+      if (box) box.classList.add('picked');
+    });
+    $('#sumlist').innerHTML = lines.length
+      ? lines.map((l) => '<li><span>' + Site.esc(l.label) + ' × ' + l.qty + '</span><span>' + Site.baht(l.sub) + '</span></li>').join('')
+      : '<li class="none">ยังไม่ได้เลือกสินค้า</li>';
+    $('#sumTotal').textContent = Site.baht(total);
+    $('#payTotal').textContent = total ? Site.baht(total) : '–';
+    $('#mobarT').textContent = Site.baht(total);
+    $('#mobarN').textContent = pieces ? pieces + ' ชิ้น · ' + lines.length + ' รายการ' : 'ยังไม่ได้เลือกสินค้า';
+    if (total) setErr('items', '');
+    return { total: total, lines: lines };
+  }
+
+  document.addEventListener('click', (e) => {
+    const id = e.target.dataset && e.target.dataset.step;
+    if (!id || !cart[id]) return;
+    cart[id].qty = Math.min(99, Math.max(0, cart[id].qty + Number(e.target.dataset.d)));
+    const i = document.querySelector('[data-qty="' + CSS.escape(id) + '"]');
+    if (i) i.value = cart[id].qty;
+    recalc();
+  });
+  document.addEventListener('input', (e) => {
+    const q = e.target.dataset && e.target.dataset.qty;
+    const s = e.target.dataset && e.target.dataset.size;
+    if (q && cart[q]) { cart[q].qty = Math.min(99, Math.max(0, parseInt(e.target.value || 0, 10) || 0)); recalc(); }
+    if (s && cart[s]) { cart[s].size = e.target.value; recalc(); }
+  });
+
+  /* โหลดข้อมูลร้าน: แสดงของที่จำไว้ก่อน แล้วค่อยอัปเดตเบื้องหลัง */
+  (function loadShop() {
+    if (demo) { applyShop(DEMO_SHOP); return; }
+    const cached = Site.cacheGet('shop');
+    if (cached) applyShop(cached);
+    Site.get('shop').then((s) => {
+      applyShop({ texts: s.texts, images: s.images, depts: s.depts, products: s.products });
+      Site.cacheSet('shop', { texts: s.texts, images: s.images, depts: s.depts, products: s.products });
+    }).catch(() => {
+      if (!cached) $('#plist').innerHTML = '<div class="empty-products">โหลดรายการสินค้าไม่สำเร็จ โปรดรีเฟรชหน้าอีกครั้ง</div>';
+    });
+  })();
+
+  /* วันที่โอน: ระบบใส่วันนี้ให้ แก้ได้ */
+  const dateInput = $('#transferDate');
+  function showDateHint() { $('#date-hint').textContent = dateInput.value ? Site.thaiDate(dateInput.value) : ''; }
+  dateInput.max = Site.todayISO();
+  dateInput.value = Site.todayISO();
+  dateInput.addEventListener('change', () => { setErr('transferDate', ''); showDateHint(); });
+  showDateHint();
+
+  /* คัดลอกเลขบัญชี */
+  $('#copyAcct').addEventListener('click', async (e) => {
+    const num = $('#accountNumber').textContent.replace(/\s|-/g, '');
+    try { await navigator.clipboard.writeText(num); }
+    catch (x) {
+      const t = document.createElement('textarea');
+      t.value = num; document.body.appendChild(t); t.select();
+      try { document.execCommand('copy'); } catch (y) { /* ignore */ }
+      t.remove();
+    }
+    e.target.textContent = 'คัดลอกแล้ว';
+    setTimeout(() => (e.target.textContent = 'คัดลอกเลขที่บัญชี'), 1800);
+  });
+
+  /* สลิป */
+  const slip = $('#slip');
+  let slipURL = null;
+  function clearSlip() {
+    slip.value = '';
+    if (slipURL) { URL.revokeObjectURL(slipURL); slipURL = null; }
+    $('#slipPrev').hidden = true;
+  }
+  slip.addEventListener('change', () => {
+    const f = slip.files[0];
+    if (!f) { clearSlip(); return; }
+    if (!/^image\/(jpeg|png|webp)$/.test(f.type) || f.size > 10 * 1024 * 1024) {
+      clearSlip();
+      setErr('slip', 'ไฟล์ต้องเป็นรูปภาพ JPG, PNG หรือ WebP ขนาดไม่เกิน 10 MB โปรดเลือกไฟล์ใหม่');
+      return;
+    }
+    setErr('slip', '');
+    if (slipURL) URL.revokeObjectURL(slipURL);
+    slipURL = URL.createObjectURL(f);
+    $('#slipImg').src = slipURL;
+    $('#slipName').textContent = f.name;
+    $('#slipPrev').hidden = false;
+  });
+  $('#slipRemove').addEventListener('click', () => { clearSlip(); slip.focus(); });
+
+  /* ตรวจข้อมูล */
+  function setErr(id, msg) {
+    const el = document.getElementById('err-' + id);
+    if (el) el.textContent = msg;
+    const f = document.getElementById(id);
+    if (f) f.setAttribute('aria-invalid', msg ? 'true' : 'false');
+  }
+  function validate() {
+    let first = null;
+    const flag = (id, msg, el) => { setErr(id, msg); if (msg && !first) first = el || document.getElementById(id); };
+    const r = recalc();
+    flag('items', r.total ? '' : 'โปรดเลือกสินค้าอย่างน้อย 1 รายการ', $('#plist'));
+    flag('dept', $('#dept').value ? '' : 'โปรดเลือกสาขาวิชา');
+    flag('firstName', $('#firstName').value.trim() ? '' : 'โปรดระบุชื่อ');
+    flag('lastName', $('#lastName').value.trim() ? '' : 'โปรดระบุนามสกุล');
+    const phone = $('#phone').value.trim();
+    flag('phone', /^[0-9+\-() ]{6,30}$/.test(phone) && phone.replace(/\D/g, '').length >= 6
+      ? '' : 'โปรดระบุหมายเลขโทรศัพท์ที่ติดต่อได้ ใช้ได้เฉพาะตัวเลข เครื่องหมาย + - และวงเล็บ');
+    const dv = dateInput.value;
+    flag('transferDate', !dv ? 'โปรดระบุวันที่โอนเงิน' : (dv > Site.todayISO() ? 'วันที่โอนเงินต้องไม่เกินวันที่ปัจจุบัน' : ''), dateInput);
+    flag('slip', slip.files[0] ? '' : 'โปรดแนบสลิปการโอนเงิน', slip);
+    flag('consent', $('#consent').checked ? '' : 'โปรดให้ความยินยอมในการเก็บรวบรวมข้อมูลเพื่อดำเนินการต่อ');
+    return first;
+  }
+
+  /* ส่งคำสั่งซื้อ */
+  let lastOrder = null;
+  async function send(total) {
+    const slipData = await Site.compressImage(slip.files[0], { maxDim: 2000, quality: 0.85, mime: 'image/jpeg', keepBelow: 900 * 1024, maxBytes: 5 * 1024 * 1024 });
+    const items = [];
+    (SHOP.products || []).forEach((p) => {
+      const c = cart[p.id];
+      if (c && c.qty) items.push({ productId: p.id, size: p.sizes && p.sizes.length ? c.size : '', qty: c.qty });
+    });
+    return Site.post('submit', {
+      dept: $('#dept').value,
+      studentId: $('#studentId').value.trim(),
+      firstName: $('#firstName').value.trim(),
+      lastName: $('#lastName').value.trim(),
+      phone: $('#phone').value.trim(),
+      transferDate: dateInput.value,
+      consent: $('#consent').checked,
+      website: $('#website').value,
+      items: items,
+      total: total,
+      slip: { type: slipData.type, data: slipData.data }
+    });
+  }
+
+  const submitBtn = $('#submitBtn');
+  async function doSubmit() {
+    $('#formError').textContent = '';
+    const bad = validate();
+    if (bad) {
+      $('#formError').textContent = 'ยังกรอกข้อมูลไม่ครบ โปรดตรวจช่องที่มีข้อความสีแดง';
+      bad.scrollIntoView({ block: 'center' });
+      if (bad.focus) bad.focus();
+      return;
+    }
+    const r = recalc();
+    submitBtn.disabled = true;
+    const label = submitBtn.textContent;
+    submitBtn.textContent = 'กำลังส่งข้อมูล…';
+    try {
+      let res;
+      if (demo) {
+        await new Promise((x) => setTimeout(x, 400));
+        res = { no: 'ST69001', code: '482913', total: r.total };
+      } else {
+        res = await send(r.total);
+      }
+      showDone(res, r);
+    } catch (err) {
+      const why = err && ['VALIDATION', 'BUSY', 'IMAGE'].indexOf(err.code) >= 0 ? err.message + ' ' : '';
+      $('#formError').textContent = why
+        ? 'ส่งคำสั่งซื้อไม่สำเร็จ: ' + why + 'ข้อมูลที่กรอกไว้ยังอยู่ครบ'
+        : 'ส่งคำสั่งซื้อไม่สำเร็จ โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ตแล้วลองอีกครั้ง ข้อมูลที่กรอกไว้ยังอยู่ครบ';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = label;
+    }
+  }
+  $('#orderForm').addEventListener('submit', (e) => { e.preventDefault(); doSubmit(); });
+  $('#mobarBtn').addEventListener('click', doSubmit);
+
+  function showDone(res, r) {
+    const phone = $('#phone').value.replace(/\D/g, '');
+    lastOrder = {
+      no: res.no, code: res.code, total: res.total || r.total, lines: r.lines,
+      name: $('#firstName').value.trim() + ' ' + $('#lastName').value.trim(),
+      last4: phone.slice(-4), date: Site.todayISO()
+    };
+    $('#doneCode').textContent = res.code;
+    $('#doneNo').textContent = res.no;
+    $('#doneTotal').textContent = Site.baht(lastOrder.total);
+    $('#doneLast4').textContent = lastOrder.last4;
+    $('#capture').hidden = true;
+    $('#orderForm').hidden = true;
+    $('#summaryCard').hidden = true;
+    $('#doneView').hidden = false;
+    $('#mobar').hidden = true;
+    $('#doneTitle').focus();
+    window.scrollTo({ top: 0 });
+  }
+
+  $('#copyCode').addEventListener('click', async (e) => {
+    try { await navigator.clipboard.writeText($('#doneCode').textContent); } catch (x) { /* ignore */ }
+    e.target.textContent = 'คัดลอกแล้ว';
+    setTimeout(() => (e.target.textContent = 'คัดลอกรหัส'), 1800);
+  });
+
+  /* บันทึกเป็นรูป: วาดใบยืนยันลง canvas แล้วดาวน์โหลด (บนมือถือให้กดค้างที่รูปเพื่อบันทึก) */
+  $('#saveImg').addEventListener('click', () => {
+    if (!lastOrder) return;
+    const W = 640, H = 250 + Math.max(1, lastOrder.lines.length) * 26 + 120;
+    const c = document.createElement('canvas');
+    c.width = W * 2; c.height = H * 2;
+    const g = c.getContext('2d');
+    g.scale(2, 2);
+    g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H);
+    g.fillStyle = '#0f6b66'; g.fillRect(0, 0, W, 8);
+    g.fillStyle = '#4a5d6e'; g.font = '15px "IBM Plex Sans Thai", sans-serif';
+    g.fillText(($('[data-cfg="orgLine1"]') || {}).textContent || '', 32, 44);
+    g.fillStyle = '#12273b'; g.font = '700 22px "Noto Serif Thai", serif';
+    g.fillText('ใบยืนยันคำสั่งซื้ออุปกรณ์การเรียน', 32, 78);
+
+    g.fillStyle = '#e4f1ee'; g.fillRect(32, 96, W - 64, 92);
+    g.fillStyle = '#4a5d6e'; g.font = '14px "IBM Plex Sans Thai", sans-serif';
+    g.fillText('รหัสตรวจสอบ (ใช้คู่กับเบอร์โทร 4 ตัวท้าย ' + lastOrder.last4 + ')', 48, 122);
+    g.fillStyle = '#0a524e'; g.font = '700 40px "Noto Serif Thai", serif';
+    g.fillText(lastOrder.code, 48, 166);
+    g.fillStyle = '#4a5d6e'; g.font = '14px "IBM Plex Sans Thai", sans-serif';
+    const noTxt = 'เลขคำสั่งซื้อ ' + lastOrder.no;
+    g.fillText(noTxt, W - 48 - g.measureText(noTxt).width, 166);
+
+    let y = 220;
+    g.fillStyle = '#12273b'; g.font = '15px "IBM Plex Sans Thai", sans-serif';
+    lastOrder.lines.forEach((l) => {
+      g.fillText(l.label + ' × ' + l.qty, 32, y);
+      const t = Site.baht(l.sub);
+      g.fillText(t, W - 32 - g.measureText(t).width, y);
+      y += 26;
+    });
+    g.strokeStyle = '#cfdcd8'; g.beginPath(); g.moveTo(32, y - 4); g.lineTo(W - 32, y - 4); g.stroke();
+    y += 26;
+    g.font = '600 18px "IBM Plex Sans Thai", sans-serif';
+    g.fillText('ยอดรวม', 32, y);
+    const tt = Site.baht(lastOrder.total) + ' บาท';
+    g.fillText(tt, W - 32 - g.measureText(tt).width, y);
+    g.fillStyle = '#4a5d6e'; g.font = '14px "IBM Plex Sans Thai", sans-serif';
+    g.fillText('ผู้สั่งซื้อ ' + lastOrder.name, 32, y + 30);
+    g.fillText('วันที่สั่งซื้อ ' + Site.thaiDate(lastOrder.date), 32, y + 52);
+    g.fillText('ตรวจสอบสถานะที่หน้าตรวจสอบคำสั่งซื้อ ด้วยรหัส 6 หลักและเบอร์โทร 4 ตัวท้าย', 32, y + 74);
+
+    const url = c.toDataURL('image/png');
+    $('#captureImg').src = url;
+    $('#capture').hidden = false;
+    try {
+      const a = document.createElement('a');
+      a.href = url; a.download = 'คำสั่งซื้อ-' + lastOrder.no + '.png';
+      document.body.appendChild(a); a.click(); a.remove();
+      $('#captureNote').textContent = 'ถ้าไฟล์ไม่ถูกดาวน์โหลด ให้กดค้างที่รูปแล้วเลือกบันทึกรูปภาพ';
+    } catch (x) {
+      $('#captureNote').textContent = 'กดค้างที่รูปแล้วเลือกบันทึกรูปภาพ';
+    }
+    $('#capture').scrollIntoView({ block: 'nearest' });
+  });
+
+  $('#againBtn').addEventListener('click', () => {
+    $('#orderForm').reset();
+    Object.keys(cart).forEach((k) => { cart[k].qty = 0; });
+    clearSlip();
+    dateInput.value = Site.todayISO();
+    showDateHint();
+    ['items', 'dept', 'firstName', 'lastName', 'phone', 'transferDate', 'slip', 'consent'].forEach((id) => setErr(id, ''));
+    renderProducts();
+    $('#doneView').hidden = true;
+    $('#orderForm').hidden = false;
+    $('#summaryCard').hidden = false;
+    $('#mobar').hidden = false;
+    window.scrollTo({ top: 0 });
+  });
+</script>
+</body>
+</html>

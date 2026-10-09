@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>ระบบจัดการคำสั่งซื้ออุปกรณ์การเรียน (Admin)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Noto+Serif+Thai:wght@600;700&display=swap" media="print" onload="this.media='all';this.onload=null">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Noto+Serif+Thai:wght@600;700&display=swap"></noscript>
+<style>
+  :root {
+    --ink: #12273b; --ink-soft: #4a5d6e; --teal: #0f6b66; --teal-dark: #0a524e;
+    --mint: #e4f1ee; --paper: #f5f8f7; --card: #ffffff; --line: #cfdcd8;
+    --amber: #f2b632; --amber-soft: #fff1cc; --danger: #b3261e; --danger-soft: #fde8e6;
+    --mark: 46px;
+    --serif: "Noto Serif Thai", "Tahoma", serif;
+    --sans: "IBM Plex Sans Thai", "Tahoma", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 1.0625rem; line-height: 1.7; }
+  img, svg { max-width: 100%; }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+  [hidden] { display: none !important; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  h1, h2, h3 { font-family: var(--serif); text-wrap: balance; margin: 0; }
+
+  .demo-banner { background: var(--amber-soft); border-bottom: 1px solid var(--amber); padding: 10px 16px; font-size: 0.9375rem; text-align: center; }
+
+  .site-head { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; max-width: 1180px; margin: 0 auto; padding: 16px 16px 6px; }
+  .mark { flex: none; width: var(--mark); height: var(--mark); border-radius: 12px; background: var(--teal); color: #fff; display: grid; place-items: center; overflow: hidden; }
+  .mark svg { width: 28px; height: 28px; }
+  .org { flex: 1 1 14rem; min-width: 0; margin: 0; line-height: 1.45; font-size: 0.9375rem; color: var(--ink-soft); }
+  .org strong { display: block; color: var(--ink); font-weight: 600; font-size: 1rem; }
+  .head-right { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; margin-left: auto; }
+  .who { font-size: 0.875rem; color: var(--ink-soft); }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
+    min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid var(--ink); background: #fff; color: var(--ink);
+    font-size: 0.9375rem; font-weight: 500; cursor: pointer; white-space: nowrap; }
+  .btn:hover:not(:disabled) { background: var(--ink); color: #fff; }
+  .btn:disabled { border-color: var(--line); color: #8a9aa6; background: #f3f6f5; cursor: not-allowed; }
+  .btn.primary { background: var(--teal); border-color: var(--teal); color: #fff; font-weight: 600; }
+  .btn.primary:hover:not(:disabled) { background: var(--teal-dark); border-color: var(--teal-dark); }
+  .btn.primary:disabled { background: #9dbdb9; border-color: #9dbdb9; color: #fff; }
+  .btn.teal { border-color: var(--teal); color: var(--teal-dark); }
+  .btn.teal:hover:not(:disabled) { background: var(--teal); color: #fff; }
+  .btn.danger { border-color: var(--danger); color: var(--danger); }
+  .btn.danger:hover:not(:disabled) { background: var(--danger); color: #fff; }
+  .btn.sm { min-height: 40px; padding: 0 14px; font-size: 0.9063rem; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 8px 16px 110px; }
+  .login { max-width: 420px; margin: 40px auto; }
+
+  .tabs { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 8px; margin: 10px 0 20px; border-bottom: 2px solid var(--line); }
+  .tab { display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 16px; cursor: pointer;
+    border: 0; border-bottom: 4px solid transparent; margin-bottom: -2px; background: none; font-weight: 600; font-size: 1rem; color: var(--ink-soft); white-space: nowrap; }
+  .tab:hover { color: var(--ink); }
+  .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--teal); }
+  .count { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 8px; border-radius: 999px; background: var(--amber); color: var(--ink); font-size: 0.875rem; font-weight: 600; line-height: 1; }
+  .count.zero { background: var(--mint); color: var(--teal-dark); }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px 18px; margin-bottom: 16px; }
+  .card h2 { font-weight: 600; font-size: 1.25rem; line-height: 1.5; margin-bottom: 4px; }
+  .card .sub { margin: 0 0 14px; color: var(--ink-soft); font-size: 0.9375rem; }
+
+  .field { margin-bottom: 16px; }
+  .field:last-child { margin-bottom: 0; }
+  label, .label { display: block; font-weight: 500; margin-bottom: 4px; }
+  .help { margin: 4px 0 0; font-size: 0.875rem; color: var(--ink-soft); line-height: 1.55; }
+  input[type="text"], input[type="password"], input[type="number"], input[type="search"], select, textarea {
+    width: 100%; min-height: 48px; padding: 9px 14px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; }
+  textarea { min-height: 88px; resize: vertical; line-height: 1.6; }
+  input:hover, textarea:hover, select:hover { border-color: #9fb6b0; }
+  [aria-invalid="true"] { border-color: var(--danger) !important; }
+  .err { margin: 6px 0 0; color: var(--danger); font-size: 0.9375rem; line-height: 1.5; }
+  .err:empty { display: none; }
+  .grid2 { display: grid; gap: 16px; }
+  @media (min-width: 760px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+  .row-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+  details.grp { border: 1px solid var(--line); border-radius: 12px; margin-bottom: 12px; background: #fff; }
+  details.grp > summary { list-style: none; cursor: pointer; padding: 14px 16px; font-weight: 600; display: flex; align-items: center; gap: 10px; min-height: 52px; }
+  details.grp > summary::-webkit-details-marker { display: none; }
+  details.grp > summary::before { content: ""; width: 9px; height: 9px; border-right: 2px solid var(--ink-soft); border-bottom: 2px solid var(--ink-soft); transform: rotate(-45deg); transition: transform .15s; flex: none; }
+  details.grp[open] > summary::before { transform: rotate(45deg); }
+  .grp-body { padding: 4px 16px 16px; display: grid; gap: 16px; }
+
+  .thumb { width: 110px; height: 110px; border-radius: 12px; border: 2px dashed var(--line); background: var(--paper) center / cover no-repeat;
+    display: grid; place-items: center; overflow: hidden; color: var(--ink-soft); font-size: 0.8125rem; text-align: center; padding: 6px; line-height: 1.4; flex: none; }
+  .thumb img { width: 100%; height: 100%; object-fit: contain; background: #fff; display: block; }
+  .thumb.has { border-style: solid; }
+  .img-row { display: flex; gap: 14px; align-items: flex-start; }
+  .file-in { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+  .file-in:focus-visible + label.btn { outline: 3px solid var(--amber); outline-offset: 2px; }
+
+  .deptrow { display: flex; gap: 8px; align-items: center; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+  .deptrow .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .deptrow .nm.off { color: var(--ink-soft); text-decoration: line-through; }
+  .icbtn { border: 1.5px solid var(--line); background: #fff; border-radius: 9px; width: 42px; height: 42px; cursor: pointer; color: var(--ink-soft); flex: none; }
+  .icbtn:hover { border-color: var(--teal); color: var(--teal-dark); }
+
+  .rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .row { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 10px 16px; align-items: center; }
+  @media (min-width: 1000px) { .row.order { grid-template-columns: 150px minmax(0, 1fr) 130px 150px auto; }
+    .row.product { grid-template-columns: 72px minmax(0, 1fr) 120px auto; } }
+  .ordno { font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: .03em; }
+  .when { font-size: 0.875rem; color: var(--ink-soft); }
+  .who-name { font-weight: 600; overflow-wrap: anywhere; line-height: 1.5; }
+  .mask { font-variant-numeric: tabular-nums; color: var(--ink-soft); font-size: 0.9063rem; }
+  .amt { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; line-height: 1.4; font-variant-numeric: tabular-nums; }
+  .amt small { font-family: var(--sans); font-weight: 500; font-size: 0.875rem; margin-left: 4px; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.9063rem; line-height: 1.8; padding: 0 12px; border-radius: 999px; white-space: nowrap; }
+  .badge::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+  .badge.pending { background: var(--amber-soft); color: #7a5600; }
+  .badge.approved { background: var(--mint); color: var(--teal-dark); }
+  .badge.declined { background: var(--danger-soft); color: var(--danger); }
+  .row-note { grid-column: 1 / -1; margin: 0; font-size: 0.875rem; color: var(--ink-soft); line-height: 1.55; }
+  .pthumb { width: 72px; height: 72px; border-radius: 10px; background: var(--mint); display: grid; place-items: center; overflow: hidden; color: var(--teal-dark); font-size: 0.75rem; flex: none; }
+  .pthumb img { width: 100%; height: 100%; object-fit: cover; }
+  .empty { background: var(--card); border: 1px dashed var(--line); border-radius: 14px; padding: 28px 20px; text-align: center; color: var(--ink-soft); }
+
+  .sizetab { width: 100%; border-collapse: collapse; }
+  .sizetab th { font-size: 0.875rem; color: var(--ink-soft); text-align: left; font-weight: 600; padding: 0 8px 6px 0; }
+  .sizetab td { padding: 0 8px 8px 0; vertical-align: top; }
+  .sizetab input { min-height: 44px; }
+  .seg-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .seg-opt { position: relative; display: block; margin: 0; font-weight: 500; }
+  .seg-opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .seg-opt span { display: flex; align-items: center; min-height: 48px; padding: 4px 16px; cursor: pointer; border: 1.5px solid var(--line); border-radius: 999px; background: #fff; }
+  .seg-opt span:hover { border-color: var(--teal); }
+  .seg-opt input:checked + span { background: var(--ink); border-color: var(--ink); color: #fff; }
+  fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+
+  .filters { display: grid; gap: 12px; }
+  @media (min-width: 860px) { .filters.f3 { grid-template-columns: minmax(0, 1fr) 200px 220px; align-items: end; }
+    .filters.f4 { grid-template-columns: 1fr 1fr 1fr 1fr; align-items: end; } }
+
+  dialog { border: 0; border-radius: 16px; padding: 0; width: min(100% - 24px, 760px); max-height: calc(100dvh - 24px); color: var(--ink); box-shadow: 0 20px 60px rgba(18,39,59,.3); }
+  dialog::backdrop { background: rgba(18,39,59,.55); }
+  .dlg-head { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: #fff; z-index: 1; }
+  .dlg-head h2 { margin: 0; font-size: 1.25rem; line-height: 1.5; flex: 1; }
+  .x { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--paper); font-size: 1.3rem; line-height: 1; cursor: pointer; }
+  .dlg-body { padding: 16px 20px; display: grid; gap: 16px; }
+  .dlg-foot { padding: 14px 20px 18px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; background: #fff; position: sticky; bottom: 0; }
+  .slip { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 8px; text-align: center; }
+  .slip img { max-height: 52vh; width: auto; margin: 0 auto; display: block; border-radius: 8px; }
+  .itab { width: 100%; border-collapse: collapse; font-size: 0.9688rem; }
+  .itab th, .itab td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); }
+  .itab th { font-size: 0.875rem; color: var(--ink-soft); font-weight: 600; }
+  .itab td:last-child, .itab th:last-child { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .itab tr.sum td { border-bottom: 0; font-weight: 700; }
+  .dl { display: grid; grid-template-columns: 10.5em minmax(0, 1fr); gap: 6px 14px; margin: 0; font-size: 0.9688rem; }
+  .dl dt { color: var(--ink-soft); }
+  .dl dd { margin: 0; font-weight: 500; overflow-wrap: anywhere; }
+  @media (max-width: 560px) { .dl { grid-template-columns: 1fr; gap: 0; } .dl dt { margin-top: 8px; } }
+  .notice { margin: 0; padding: 10px 14px; border-radius: 10px; background: var(--mint); border-left: 4px solid var(--teal); font-size: 0.9375rem; line-height: 1.6; }
+  .notice.warn { background: var(--amber-soft); border-left-color: var(--amber); }
+  .notice.bad { background: var(--danger-soft); border-left-color: var(--danger); }
+
+  .savebar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: #fff; border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -4px 16px rgba(18,39,59,.06); }
+  .savebar > div { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .savebar .state { flex: 1 1 14rem; font-size: 0.9375rem; color: var(--ink-soft); }
+  .toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%); z-index: 50; width: min(100% - 24px, 560px); }
+  .toast > div { padding: 12px 18px; border-radius: 12px; background: var(--ink); color: #fff; font-size: 0.9688rem; line-height: 1.6; box-shadow: 0 8px 24px rgba(18,39,59,.3); }
+  .toast > div.bad { background: var(--danger); }
+</style>
+</head>
+<body>
+
+<div class="demo-banner" id="demoBanner" role="note" hidden>
+  โหมดตัวอย่าง: ยังไม่ได้ใส่ <code>apiUrl</code> ใน config.js หน้านี้แสดงข้อมูลสมมติและบันทึกอะไรไม่ได้
+</div>
+
+<header class="site-head">
+  <div class="mark" aria-hidden="true">
+    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4h8M14 4v8l-6.2 11.2A3 3 0 0 0 10.4 27.5h11.2a3 3 0 0 0 2.6-4.3L18 12V4"/><path d="M10.5 20h11"/>
+    </svg>
+  </div>
+  <p class="org"><strong>ระบบจัดการคำสั่งซื้ออุปกรณ์การเรียน</strong><span>สำหรับเจ้าหน้าที่</span></p>
+  <div class="head-right" id="headRight" hidden>
+    <span class="who" id="whoAmI"></span>
+    <button type="button" class="btn sm" id="pwBtn">เปลี่ยนรหัสผ่าน</button>
+    <button type="button" class="btn sm" id="logoutBtn">ออกจากระบบ</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- เข้าสู่ระบบ -->
+  <div class="card login" id="loginCard">
+    <h2 style="text-align:center">เข้าสู่ระบบผู้ดูแล</h2>
+    <p class="sub" style="text-align:center">ใช้รหัสผ่านเดียวของงานกิจการนักศึกษา</p>
+    <form id="loginForm" novalidate>
+      <div class="field"><label for="pw">รหัสผ่าน</label><input type="password" id="pw" autocomplete="current-password"></div>
+      <button type="submit" class="btn primary" id="loginBtn" style="width:100%">เข้าสู่ระบบ</button>
+      <p class="err" id="err-login" role="alert"></p>
+    </form>
+    <p class="help" style="text-align:center;margin-top:12px">ใส่รหัสผิดเกิน 10 ครั้งใน 15 นาที ระบบจะล็อก 15 นาที</p>
+  </div>
+
+  <!-- แผงควบคุม -->
+  <div id="panel" hidden>
+    <p class="notice warn" id="pwWarn" hidden style="margin-bottom:14px">ยังใช้รหัสผ่านเริ่มต้นอยู่ โปรดกด “เปลี่ยนรหัสผ่าน” ทันที</p>
+    <p class="notice warn" id="tgWarn" hidden style="margin-bottom:14px">ยังไม่ได้ตั้งค่าแจ้งเตือน Telegram จะไม่มีการแจ้งเตือนเมื่อมีคำสั่งซื้อใหม่ (ตั้งค่าใน Script properties)</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-m="m1">ตั้งค่าหน้าเว็บ</button>
+      <button class="tab" role="tab" aria-selected="false" data-m="m2">สินค้าและราคา</button>
+      <button class="tab" role="tab" aria-selected="false" data-m="m3">ตรวจสอบคำสั่งซื้อ <span class="count zero" id="pendingCount">0</span></button>
+      <button class="tab" role="tab" aria-selected="false" data-m="m4">Export CSV</button>
+    </div>
+
+    <!-- เมนู 1 ตั้งค่าหน้าเว็บ -->
+    <section id="m1">
+      <div id="textGroups"></div>
+
+      <div class="card">
+        <h2>รูปภาพ</h2>
+        <p class="sub">โลโก้และภาพพื้นหลังต้องแชร์เป็นสาธารณะใน Google Drive ถ้ามหาวิทยาลัยไม่อนุญาต ระบบจะแจ้งตอนบันทึก</p>
+        <div class="grid2" id="imageRows"></div>
+      </div>
+
+      <div class="card">
+        <h2>รายการสาขาวิชา</h2>
+        <p class="sub">สาขาที่ซ่อนจะไม่ขึ้นในช่องเลือกของหน้าสั่งซื้อ แต่คำสั่งซื้อเก่ายังแสดงชื่อสาขาเดิมได้ถูกต้อง</p>
+        <div style="display:grid;gap:8px" id="deptList"></div>
+        <div class="row-actions" style="margin-top:12px">
+          <input type="text" id="newDept" placeholder="ชื่อสาขาใหม่" style="max-width:300px">
+          <button class="btn teal sm" type="button" id="addDept">เพิ่มสาขา</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- เมนู 2 สินค้าและราคา -->
+    <section id="m2" hidden>
+      <p class="notice warn" style="margin-bottom:14px">สินค้าที่มีคำสั่งซื้อแล้วจะลบไม่ได้ ให้ปิดการขายแทน คำสั่งซื้อเก่าจะยังแสดงชื่อและราคาที่ขายในตอนนั้นเสมอ</p>
+      <div class="row-actions" style="margin-bottom:14px"><button class="btn primary" type="button" id="newProduct">+ เพิ่มสินค้า</button></div>
+      <ul class="rows" id="productRows"></ul>
+    </section>
+
+    <!-- เมนู 3 ตรวจสอบคำสั่งซื้อ -->
+    <section id="m3" hidden>
+      <div class="card">
+        <div class="filters f3">
+          <div><label for="of-q">ค้นหา</label><input type="search" id="of-q" placeholder="เลขคำสั่งซื้อ ชื่อ นามสกุล หรือเบอร์โทร"></div>
+          <div><label for="of-st">สถานะ</label><select id="of-st">
+            <option value="">ทั้งหมด</option><option value="pending">รอตรวจสอบ</option>
+            <option value="approved">ตรวจสอบแล้ว</option><option value="declined">การชำระเงินไม่สำเร็จ</option></select></div>
+          <div><label for="of-sort">เรียงตาม</label><select id="of-sort">
+            <option value="new">ล่าสุดก่อน</option><option value="old">เก่าสุดก่อน</option>
+            <option value="total">ยอดรวมมากไปน้อย</option></select></div>
+        </div>
+        <p class="help" id="orderCountNote" style="margin-top:12px"></p>
+      </div>
+      <ul class="rows" id="orderRows"></ul>
+      <div class="row-actions" style="margin-top:14px">
+        <button class="btn" type="button" id="loadAll" hidden>โหลดคำสั่งซื้อทั้งหมด</button>
+      </div>
+    </section>
+
+    <!-- เมนู 4 Export CSV -->
+    <section id="m4" hidden>
+      <div class="card">
+        <h2>ดาวน์โหลดข้อมูลเป็น CSV</h2>
+        <p class="sub">ไฟล์มี BOM เปิดใน Excel ภาษาไทยไม่เพี้ยน เบอร์โทรและรหัสนักศึกษาไม่ถูกตัดหลัก · ทุกครั้งที่ Export ระบบบันทึกลง Log</p>
+        <div class="filters f4">
+          <div><label for="cv-month">เดือนที่สั่งซื้อ</label><select id="cv-month"><option value="">ทุกเดือน</option></select></div>
+          <div><label for="cv-year">ปี (พ.ศ.)</label><select id="cv-year"><option value="">ทุกปี</option></select></div>
+          <div><label for="cv-dept">สาขาวิชา</label><select id="cv-dept"><option value="">ทุกสาขา</option></select></div>
+          <div><label for="cv-status">สถานะ</label><select id="cv-status">
+            <option value="">ทุกสถานะ</option><option value="pending">รอตรวจสอบ</option>
+            <option value="approved">ตรวจสอบแล้ว</option><option value="declined">การชำระเงินไม่สำเร็จ</option></select></div>
+        </div>
+        <div class="grid2" style="margin-top:18px">
+          <div style="border:1.5px solid var(--line);border-radius:12px;padding:16px">
+            <h3 style="font-family:var(--sans);font-size:1.0625rem;font-weight:600">ไฟล์ที่ 1 · รายคำสั่งซื้อ</h3>
+            <p class="help">1 แถวต่อ 1 คำสั่งซื้อ พร้อมคอลัมน์สรุปสินค้า เช่น “เสื้อกีฬาคณะ ไซส์ L x2; เข็มขัด x1”</p>
+            <button class="btn primary sm" type="button" data-csv="orders" style="margin-top:10px">ดาวน์โหลด</button>
+          </div>
+          <div style="border:1.5px solid var(--line);border-radius:12px;padding:16px">
+            <h3 style="font-family:var(--sans);font-size:1.0625rem;font-weight:600">ไฟล์ที่ 2 · รายสินค้า</h3>
+            <p class="help">1 แถวต่อ 1 รายการสินค้าในคำสั่งซื้อ เอาไป pivot ต่อใน Excel ได้</p>
+            <button class="btn primary sm" type="button" data-csv="items" style="margin-top:10px">ดาวน์โหลด</button>
+          </div>
+          <div style="border:1.5px solid var(--line);border-radius:12px;padding:16px">
+            <h3 style="font-family:var(--sans);font-size:1.0625rem;font-weight:600">ไฟล์ที่ 3 · สรุปยอดสั่งผลิต</h3>
+            <p class="help">รวมจำนวนตามชื่อสินค้าและขนาด แนะนำให้กรองสถานะเป็น “ตรวจสอบแล้ว” ก่อนดาวน์โหลด</p>
+            <button class="btn primary sm" type="button" data-csv="summary" style="margin-top:10px">ดาวน์โหลด</button>
+          </div>
+        </div>
+        <p class="err" id="err-csv" role="alert"></p>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="savebar" id="saveBar" hidden><div>
+  <span class="state" id="saveState">แก้ไขแล้วอย่าลืมกดบันทึก</span>
+  <button class="btn primary" type="button" id="saveConfigBtn">บันทึกและเผยแพร่</button>
+</div></div>
+
+<div class="toast" id="toast" hidden><div id="toastBody"></div></div>
+
+<!-- กล่องตรวจสลิป -->
+<dialog id="checkDlg" aria-labelledby="checkTitle">
+  <div class="dlg-head"><h2 id="checkTitle">ตรวจสอบคำสั่งซื้อ</h2><button type="button" class="x" data-close="checkDlg" aria-label="ปิด">✕</button></div>
+  <div class="dlg-body" id="checkBody"></div>
+  <div class="dlg-foot" id="checkFoot"></div>
+</dialog>
+
+<!-- กล่องแก้ไขสินค้า -->
+<dialog id="prodDlg" aria-labelledby="prodTitle">
+  <div class="dlg-head"><h2 id="prodTitle">สินค้า</h2><button type="button" class="x" data-close="prodDlg" aria-label="ปิด">✕</button></div>
+  <div class="dlg-body">
+    <div class="field"><label for="p-name">ชื่อสินค้า</label><input type="text" id="p-name"></div>
+    <div class="field"><label for="p-detail">รายละเอียดสั้น <span style="font-weight:400;color:var(--ink-soft)">(ไม่บังคับ)</span></label><input type="text" id="p-detail"></div>
+    <div class="field">
+      <span class="label">รูปสินค้า <span style="font-weight:400;color:var(--ink-soft)">(ไม่บังคับ)</span></span>
+      <div class="img-row">
+        <div class="thumb" id="p-thumb">ยังไม่มีรูป</div>
+        <div>
+          <p class="help" style="margin:0 0 8px">ระบบย่อเป็นรูปเล็กเก็บไว้ในฐานข้อมูล จึงแสดงได้แม้มหาวิทยาลัยไม่อนุญาตให้แชร์ไฟล์สาธารณะ</p>
+          <input type="file" class="file-in" id="p-file" accept="image/jpeg,image/png,image/webp">
+          <label class="btn sm" for="p-file">เลือกไฟล์รูป</label>
+          <button type="button" class="btn sm" id="p-imgClear">ลบรูป</button>
+        </div>
+      </div>
+    </div>
+    <fieldset>
+      <span class="label">รูปแบบราคา</span>
+      <div class="seg-row">
+        <label class="seg-opt"><input type="radio" name="pmode" value="one"><span>ราคาเดียว ไม่มีขนาด</span></label>
+        <label class="seg-opt"><input type="radio" name="pmode" value="same"><span>มีขนาด ราคาเท่ากันทุกขนาด</span></label>
+        <label class="seg-opt"><input type="radio" name="pmode" value="each"><span>มีขนาด ราคาต่างกันตามขนาด</span></label>
+      </div>
+      <p class="help" id="p-modeHint"></p>
+    </fieldset>
+    <div class="field" id="p-priceWrap" style="max-width:240px"><label for="p-price">ราคา (บาท)</label><input type="number" id="p-price" min="0" step="1"></div>
+    <div id="p-sizeWrap">
+      <span class="label">ขนาดที่มีจำหน่าย</span>
+      <table class="sizetab">
+        <thead><tr><th style="width:45%">ขนาด</th><th id="p-thPrice" style="width:35%">ราคา (บาท)</th><th></th></tr></thead>
+        <tbody id="p-sizeRows"></tbody>
+      </table>
+      <button type="button" class="btn teal sm" id="p-addSize" style="margin-top:8px">+ เพิ่มขนาด</button>
+    </div>
+    <div class="field"><label for="p-active">สถานะการขาย</label>
+      <select id="p-active" style="max-width:240px"><option value="true">เปิดขาย</option><option value="false">ปิดขาย</option></select></div>
+    <p class="notice warn" id="p-usage" hidden></p>
+    <p class="err" id="err-prod" role="alert"></p>
+  </div>
+  <div class="dlg-foot">
+    <button type="button" class="btn danger" id="p-delete" hidden>ลบสินค้า</button>
+    <button type="button" class="btn" data-close="prodDlg">ยกเลิก</button>
+    <button type="button" class="btn primary" id="p-save">บันทึก</button>
+  </div>
+</dialog>
+
+<!-- กล่องเปลี่ยนรหัสผ่าน -->
+<dialog id="pwDlg" aria-labelledby="pwTitle">
+  <div class="dlg-head"><h2 id="pwTitle">เปลี่ยนรหัสผ่าน</h2><button type="button" class="x" data-close="pwDlg" aria-label="ปิด">✕</button></div>
+  <div class="dlg-body">
+    <div class="field"><label for="pw-old">รหัสผ่านปัจจุบัน</label><input type="password" id="pw-old" autocomplete="current-password"></div>
+    <div class="field"><label for="pw-new">รหัสผ่านใหม่ (อย่างน้อย 8 ตัวอักษร)</label><input type="password" id="pw-new" autocomplete="new-password"></div>
+    <div class="field"><label for="pw-new2">พิมพ์รหัสผ่านใหม่อีกครั้ง</label><input type="password" id="pw-new2" autocomplete="new-password"></div>
+    <p class="err" id="err-pw" role="alert"></p>
+  </div>
+  <div class="dlg-foot">
+    <button type="button" class="btn" data-close="pwDlg">ยกเลิก</button>
+    <button type="button" class="btn primary" id="pw-save">บันทึกรหัสผ่านใหม่</button>
+  </div>
+</dialog>
+
+<script src="config.js"></script>
+<script src="site.js"></script>
+<script>
+  'use strict';
+  const $ = (s) => document.querySelector(s);
+  const demo = Site.demo;
+  $('#demoBanner').hidden = !demo;
+
+  let TOKEN = '';
+  let DATA = { config: { texts: {}, images: {}, depts: [] }, products: [], orders: [] };
+  let dirty = false;
+  const pendingImages = {};      // smallLogo/uniLogo/background -> {type,data} หรือ null (ลบ)
+  let prodImage;                 // undefined = ไม่เปลี่ยน, null = ลบ, object = รูปใหม่
+
+  /* กลุ่มข้อความที่เจ้าหน้าที่แก้ได้ (คีย์ต้องตรงกับ APP.TEXT_KEYS ใน Config.gs) */
+  const TEXT_GROUPS = [
+    ['ชื่อหน่วยงานและหัวเรื่อง', [
+      ['orgLine1', 'ชื่อหน่วยงาน บรรทัดที่ 1'], ['orgLine2', 'ชื่อหน่วยงาน บรรทัดที่ 2'],
+      ['heroTitle', 'หัวเรื่องหน้าสั่งซื้อ'], ['heroLead', 'คำอธิบายใต้หัวเรื่อง', 'area'],
+      ['bullet1', 'ข้อดีข้อที่ 1'], ['bullet2', 'ข้อดีข้อที่ 2'], ['bullet3', 'ข้อดีข้อที่ 3'],
+      ['trustNote', 'ข้อความเตือนเรื่องบัญชีรับเงิน', 'area']
+    ]],
+    ['บัญชีรับเงิน', [
+      ['bankName', 'ธนาคารและสาขา'], ['accountName', 'ชื่อบัญชี'],
+      ['accountNumber', 'เลขที่บัญชี', 'text', 'ตัวเลขและขีด 10–20 ตัว'],
+      ['transferHint', 'คำแนะนำการโอน', 'area']
+    ]],
+    ['ป้ายกำกับช่องกรอก', [
+      ['labelDept', 'ป้ายช่องสาขาวิชา'], ['labelStudentId', 'ป้ายช่องรหัสนักศึกษา'],
+      ['labelFirstName', 'ป้ายช่องชื่อ'], ['labelLastName', 'ป้ายช่องนามสกุล'],
+      ['labelPhone', 'ป้ายช่องเบอร์โทรศัพท์'], ['phoneHint', 'คำอธิบายใต้ช่องเบอร์โทรศัพท์']
+    ]],
+    ['ข้อมูลส่วนบุคคลและหน้าขอบคุณ', [
+      ['consentText', 'ข้อความยินยอม PDPA', 'area'],
+      ['pdpaUrl', 'ลิงก์นโยบายคุ้มครองข้อมูลส่วนบุคคล', 'text', 'ต้องขึ้นต้นด้วย https://'],
+      ['pdpaNote', 'ข้อความ PDPA ท้ายหน้า', 'area'],
+      ['thankTitle', 'หัวเรื่องหน้าขอบคุณ'], ['thankBody', 'ข้อความหน้าขอบคุณ', 'area'],
+      ['reviewDays', 'ระยะเวลาตรวจสอบ (วันทำการ)', 'text', 'ตัวเลข 1–60 เว้นว่างได้']
+    ]],
+    ['หน้าตรวจสอบคำสั่งซื้อ', [
+      ['ordersTitle', 'หัวเรื่องหน้าตรวจสอบ'], ['ordersIntro', 'คำอธิบายใต้หัวเรื่อง', 'area'],
+      ['ordersHelp', 'คำแนะนำในกล่องค้นหา', 'area'],
+      ['statusPending', 'ข้อความสถานะ: รอตรวจสอบ'], ['statusApproved', 'ข้อความสถานะ: ตรวจสอบแล้ว'],
+      ['statusDeclined', 'ข้อความสถานะ: การชำระเงินไม่สำเร็จ']
+    ]],
+    ['ช่องทางติดต่อ', [
+      ['contactPhone', 'เบอร์โทรติดต่อ'], ['contactEmail', 'อีเมลติดต่อ']
+    ]]
+  ];
+  const IMAGE_DEFS = [
+    ['uniLogo', 'โลโก้มหาวิทยาลัย', 'แนะนำ PNG พื้นโปร่ง ขนาด 184 × 184 px'],
+    ['smallLogo', 'โลโก้เล็กมุมซ้ายบน', 'แนะนำ PNG พื้นโปร่ง สี่เหลี่ยมจัตุรัส'],
+    ['background', 'ภาพพื้นหลัง', 'แนะนำกว้างอย่างน้อย 1600 px']
+  ];
+  const STATUS_TH = { pending: 'รอตรวจสอบ', approved: 'ตรวจสอบแล้ว', declined: 'การชำระเงินไม่สำเร็จ' };
+  const badge = (s) => '<span class="badge ' + s + '">' + Site.esc(STATUS_TH[s] || s) + '</span>';
+
+  function toast(msg, bad) {
+    $('#toastBody').textContent = msg;
+    $('#toastBody').className = bad ? 'bad' : '';
+    $('#toast').hidden = false;
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => { $('#toast').hidden = true; }, 4000);
+  }
+  function markDirty() { dirty = true; $('#saveBar').hidden = false; }
+
+  async function api(action, payload) {
+    if (demo) throw Site.error('DEMO', 'โหมดตัวอย่าง: ยังไม่ได้เชื่อมหลังบ้าน จึงบันทึกไม่ได้');
+    return Site.post(action, Object.assign({ token: TOKEN }, payload || {}));
+  }
+
+  /* ---------- เข้าสู่ระบบ ---------- */
+  $('#loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $('#err-login').textContent = '';
+    const btn = $('#loginBtn');
+    btn.disabled = true; btn.textContent = 'กำลังเข้าสู่ระบบ…';
+    try {
+      if (demo) { TOKEN = 'demo'; await loadDemo(); }
+      else {
+        const r = await Site.post('login', { password: $('#pw').value });
+        TOKEN = r.token;
+        const init = await api('init');
+        applyInit(init);
+      }
+      $('#loginCard').hidden = true;
+      $('#panel').hidden = false;
+      $('#headRight').hidden = false;
+    } catch (err) {
+      $('#err-login').textContent = (err && err.message) || 'เข้าสู่ระบบไม่สำเร็จ';
+    } finally {
+      btn.disabled = false; btn.textContent = 'เข้าสู่ระบบ';
+      $('#pw').value = '';
+    }
+  });
+  $('#logoutBtn').addEventListener('click', async () => {
+    try { await api('logout'); } catch (e) { /* ออกจากระบบฝั่งนี้ได้อยู่ดี */ }
+    TOKEN = '';
+    $('#panel').hidden = true; $('#headRight').hidden = true; $('#loginCard').hidden = false;
+    $('#saveBar').hidden = true;
+  });
+
+  async function loadDemo() {
+    applyInit({
+      account: 'student.sci@rmutr.ac.th', pwDefault: true, telegramReady: false,
+      orderTotal: 3, orderLimit: 300,
+      config: {
+        texts: { orgLine1: 'งานกิจการนักศึกษา คณะวิทยาศาสตร์และเทคโนโลยี', orgLine2: 'มหาวิทยาลัยเทคโนโลยีราชมงคลรัตนโกสินทร์',
+          heroTitle: 'สั่งซื้ออุปกรณ์การเรียน', bankName: 'ธนาคารกรุงไทย สาขาศาลายา', accountNumber: '123-4-56789-0',
+          accountName: 'คณะวิทยาศาสตร์และเทคโนโลยี มทร.รัตนโกสินทร์' },
+        images: {},
+        depts: [{ name: 'วิทยาการคอมพิวเตอร์' }, { name: 'เคมี' }, { name: 'เทคโนโลยีการอาหาร', hidden: true }]
+      },
+      products: [
+        { id: 'P001', name: 'เข็มขัดนักศึกษา', detail: 'หัวเข็มขัดตรามหาวิทยาลัย', priceMode: 'one', price: 180, sizes: [], sortOrder: 1, active: true, image: '', usage: { orders: 30, pending: 2 } },
+        { id: 'P002', name: 'เสื้อกีฬาคณะ', detail: 'ผ้าไมโคร สีกรมท่า', priceMode: 'each', price: 320, sortOrder: 2, active: true, image: '',
+          sizes: [['S', 320], ['M', 320], ['L', 320], ['XL', 340], ['2XL', 360]], usage: { orders: 48, pending: 4 } }
+      ],
+      orders: [
+        { no: 'ST69001', code: '482913', submittedAt: '2026-10-03T04:00:00Z', dept: 'วิทยาการคอมพิวเตอร์', studentId: '2565010112',
+          firstName: 'ณัฐพงศ์', lastName: 'จันทร์เพ็ญ', phone: '081-234-5678', total: 820, transferDate: '2026-10-03', status: 'approved', declineReason: '', dupOf: '' },
+        { no: 'ST69002', code: '771204', submittedAt: '2026-10-05T04:00:00Z', dept: 'เคมี', studentId: '',
+          firstName: 'ศิริพร', lastName: 'แก้วมณี', phone: '089-987-6543', total: 180, transferDate: '2026-10-05', status: 'pending', declineReason: '', dupOf: '' },
+        { no: 'ST69003', code: '330918', submittedAt: '2026-10-06T04:00:00Z', dept: 'เคมี', studentId: '2566020045',
+          firstName: 'ธนกร', lastName: 'พูลสวัสดิ์', phone: '064-555-0011', total: 540, transferDate: '2026-10-04', status: 'pending', declineReason: '', dupOf: 'ST69002' }
+      ]
+    });
+  }
+
+  function applyInit(init) {
+    DATA = init;
+    $('#whoAmI').textContent = init.account ? 'บัญชีระบบ ' + init.account : '';
+    $('#pwWarn').hidden = !init.pwDefault;
+    $('#tgWarn').hidden = !!init.telegramReady;
+    renderTexts();
+    renderImages();
+    renderDepts();
+    renderProducts();
+    renderOrders();
+    fillCsvFilters();
+  }
+
+  /* ---------- เมนู 1 ---------- */
+  function renderTexts() {
+    const t = DATA.config.texts || {};
+    $('#textGroups').innerHTML = TEXT_GROUPS.map((g, gi) =>
+      '<details class="grp"' + (gi === 0 ? ' open' : '') + '><summary>' + Site.esc(g[0]) + '</summary><div class="grp-body">' +
+      g[1].map(([key, label, type, help]) => {
+        const v = Site.esc(t[key] == null ? '' : t[key]);
+        return '<div class="field"><label for="t-' + key + '">' + Site.esc(label) + '</label>' +
+          (type === 'area'
+            ? '<textarea id="t-' + key + '" data-text="' + key + '" rows="2">' + v + '</textarea>'
+            : '<input type="text" id="t-' + key + '" data-text="' + key + '" value="' + v + '">') +
+          (help ? '<p class="help">' + Site.esc(help) + '</p>' : '') + '</div>';
+      }).join('') + '</div></details>').join('');
+  }
+
+  function renderImages() {
+    const imgs = DATA.config.images || {};
+    $('#imageRows').innerHTML = IMAGE_DEFS.map(([key, label, help]) => {
+      const url = Site.safeImg(imgs[key]);
+      return '<div><span class="label">' + Site.esc(label) + '</span><div class="img-row">' +
+        '<div class="thumb' + (url ? ' has' : '') + '" id="th-' + key + '">' + (url ? '<img src="' + url + '" alt="">' : 'ยังไม่มีรูป') + '</div>' +
+        '<div><p class="help" style="margin:0 0 8px">' + Site.esc(help) + '</p>' +
+        '<input type="file" class="file-in" id="f-' + key + '" data-img="' + key + '" accept="image/jpeg,image/png,image/webp">' +
+        '<label class="btn sm" for="f-' + key + '">เลือกไฟล์</label> ' +
+        '<button type="button" class="btn sm" data-imgclear="' + key + '">ลบรูป</button></div></div></div>';
+    }).join('');
+  }
+
+  function renderDepts() {
+    const list = DATA.config.depts || [];
+    $('#deptList').innerHTML = list.length ? list.map((d, i) =>
+      '<div class="deptrow">' +
+      '<button class="icbtn" type="button" data-dept-up="' + i + '" aria-label="เลื่อนขึ้น">↑</button>' +
+      '<button class="icbtn" type="button" data-dept-down="' + i + '" aria-label="เลื่อนลง">↓</button>' +
+      '<span class="nm' + (d.hidden ? ' off' : '') + '">' + Site.esc(d.name) + '</span>' +
+      '<button class="btn sm" type="button" data-dept-toggle="' + i + '">' + (d.hidden ? 'แสดง' : 'ซ่อน') + '</button>' +
+      '<button class="icbtn" type="button" data-dept-del="' + i + '" aria-label="ลบ">✕</button></div>').join('')
+      : '<p class="help" style="margin:0">ยังไม่มีสาขา เพิ่มอย่างน้อย 1 สาขาเพื่อให้หน้าสั่งซื้อใช้งานได้</p>';
+  }
+
+  document.addEventListener('input', (e) => {
+    if (e.target.dataset && e.target.dataset.text) markDirty();
+  });
+  document.addEventListener('click', (e) => {
+    const d = e.target.dataset || {};
+    const list = DATA.config.depts || (DATA.config.depts = []);
+    if (d.deptUp !== undefined) { const i = +d.deptUp; if (i > 0) { [list[i - 1], list[i]] = [list[i], list[i - 1]]; renderDepts(); markDirty(); } }
+    if (d.deptDown !== undefined) { const i = +d.deptDown; if (i < list.length - 1) { [list[i + 1], list[i]] = [list[i], list[i + 1]]; renderDepts(); markDirty(); } }
+    if (d.deptToggle !== undefined) { const i = +d.deptToggle; list[i].hidden = !list[i].hidden; renderDepts(); markDirty(); }
+    if (d.deptDel !== undefined) { list.splice(+d.deptDel, 1); renderDepts(); markDirty(); }
+    if (d.imgclear) {
+      pendingImages[d.imgclear] = null;
+      const th = document.getElementById('th-' + d.imgclear);
+      th.textContent = 'ลบเมื่อกดบันทึก'; th.classList.remove('has');
+      markDirty();
+    }
+  });
+  $('#addDept').addEventListener('click', () => {
+    const v = $('#newDept').value.trim();
+    if (!v) return;
+    (DATA.config.depts = DATA.config.depts || []).push({ name: v, hidden: false });
+    $('#newDept').value = '';
+    renderDepts(); markDirty();
+  });
+  document.addEventListener('change', async (e) => {
+    const key = e.target.dataset && e.target.dataset.img;
+    if (!key) return;
+    const f = e.target.files[0];
+    if (!f) return;
+    try {
+      const img = await Site.compressImage(f, { maxDim: key === 'background' ? 1920 : 512, mime: key === 'background' ? 'image/jpeg' : 'image/png', keepBelow: 200 * 1024, maxBytes: 3 * 1024 * 1024 });
+      pendingImages[key] = { type: img.type, data: img.data };
+      const th = document.getElementById('th-' + key);
+      th.innerHTML = '<img src="data:' + img.type + ';base64,' + img.data + '" alt="">';
+      th.classList.add('has');
+      markDirty();
+    } catch (err) { toast((err && err.message) || 'อ่านไฟล์รูปไม่สำเร็จ', true); }
+  });
+
+  $('#saveConfigBtn').addEventListener('click', async () => {
+    const btn = $('#saveConfigBtn');
+    btn.disabled = true; btn.textContent = 'กำลังบันทึก…';
+    try {
+      const texts = {};
+      document.querySelectorAll('[data-text]').forEach((el) => { texts[el.dataset.text] = el.value; });
+      await api('saveConfig', { texts: texts, depts: DATA.config.depts || [], images: pendingImages });
+      DATA.config.texts = texts;
+      Object.keys(pendingImages).forEach((k) => delete pendingImages[k]);
+      dirty = false; $('#saveBar').hidden = true;
+      toast('บันทึกและเผยแพร่แล้ว หน้าสาธารณะจะอัปเดตภายในไม่กี่วินาที');
+    } catch (err) { toast((err && err.message) || 'บันทึกไม่สำเร็จ', true); }
+    finally { btn.disabled = false; btn.textContent = 'บันทึกและเผยแพร่'; }
+  });
+
+  /* ---------- เมนู 2 สินค้า ---------- */
+  function priceText(p) {
+    if (p.priceMode === 'one') return Site.baht(p.price) + ' บาท';
+    const sizes = (p.sizes || []).map((s) => Array.isArray(s) ? { name: s[0], price: s[1] } : s);
+    if (p.priceMode === 'same') return Site.baht(p.price) + ' บาท · ' + sizes.map((s) => s.name).join(', ');
+    return sizes.map((s) => s.name + ' ' + Site.baht(s.price)).join(' · ');
+  }
+  function renderProducts() {
+    const list = DATA.products || [];
+    $('#productRows').innerHTML = list.length ? list.map((p, i) =>
+      '<li class="row product">' +
+      '<div class="pthumb">' + (Site.safeImg(p.image) ? '<img src="' + Site.safeImg(p.image) + '" alt="">' : 'รูป') + '</div>' +
+      '<div><div class="who-name">' + Site.esc(p.name) + '</div>' +
+      '<div class="mask">' + Site.esc(priceText(p)) + '</div>' +
+      '<div class="mask">มีคำสั่งซื้อแล้ว ' + ((p.usage && p.usage.orders) || 0) + ' รายการ</div></div>' +
+      '<div>' + (p.active ? '<span class="badge approved">เปิดขาย</span>' : '<span class="badge declined">ปิดขาย</span>') + '</div>' +
+      '<div class="row-actions">' +
+      '<button class="icbtn" type="button" data-prod-up="' + i + '" aria-label="เลื่อนขึ้น">↑</button>' +
+      '<button class="icbtn" type="button" data-prod-down="' + i + '" aria-label="เลื่อนลง">↓</button>' +
+      '<button class="btn sm teal" type="button" data-prod-edit="' + i + '">แก้ไข</button></div></li>').join('')
+      : '<div class="empty">ยังไม่มีสินค้า กด “เพิ่มสินค้า” เพื่อเริ่มต้น</div>';
+  }
+
+  let editing = null;   // สินค้าที่กำลังแก้ (null = เพิ่มใหม่)
+  let sizes = [];
+
+  function sizeRows() {
+    const each = document.querySelector('input[name="pmode"]:checked').value === 'each';
+    $('#p-thPrice').hidden = !each;
+    $('#p-sizeRows').innerHTML = sizes.map((s, i) =>
+      '<tr><td><input type="text" value="' + Site.esc(s.name) + '" data-sname="' + i + '" aria-label="ชื่อขนาด"></td>' +
+      (each ? '<td><input type="number" min="0" value="' + (Number(s.price) || 0) + '" data-sprice="' + i + '" aria-label="ราคาของขนาดนี้"></td>' : '') +
+      '<td><button class="icbtn" type="button" data-sdel="' + i + '" aria-label="ลบขนาด">✕</button></td></tr>').join('');
+  }
+  function syncMode() {
+    const v = document.querySelector('input[name="pmode"]:checked').value;
+    $('#p-priceWrap').hidden = v === 'each';
+    $('#p-sizeWrap').hidden = v === 'one';
+    $('#p-modeHint').textContent = v === 'one'
+      ? 'สำหรับสินค้าที่ไม่มีขนาดให้เลือก เช่น เข็มขัด กระเป๋า'
+      : v === 'same'
+        ? 'กรอกราคาช่องเดียว ระบบใช้ราคานั้นกับทุกขนาด ถ้าภายหลังไซส์ใหญ่แพงขึ้น ค่อยสลับเป็นราคาต่างกันตามขนาด'
+        : 'กรอกราคาแยกทีละขนาด เหมาะกับเสื้อหรือกางเกงที่ไซส์ใหญ่ราคาสูงกว่า';
+    sizeRows();
+  }
+  document.querySelectorAll('input[name="pmode"]').forEach((r) => r.addEventListener('change', syncMode));
+  $('#p-addSize').addEventListener('click', () => { sizes.push({ name: '', price: Number($('#p-price').value) || 0 }); sizeRows(); });
+  document.addEventListener('input', (e) => {
+    const d = e.target.dataset || {};
+    if (d.sname !== undefined) sizes[+d.sname].name = e.target.value;
+    if (d.sprice !== undefined) sizes[+d.sprice].price = Number(e.target.value) || 0;
+  });
+  document.addEventListener('click', (e) => {
+    const d = e.target.dataset || {};
+    if (d.sdel !== undefined) { sizes.splice(+d.sdel, 1); sizeRows(); }
+    if (d.prodEdit !== undefined) openProduct(DATA.products[+d.prodEdit]);
+    if (d.prodUp !== undefined || d.prodDown !== undefined) {
+      const i = d.prodUp !== undefined ? +d.prodUp : +d.prodDown;
+      const j = d.prodUp !== undefined ? i - 1 : i + 1;
+      if (j < 0 || j >= DATA.products.length) return;
+      const arr = DATA.products;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+      renderProducts();
+      api('reorderProducts', { ids: arr.map((p) => p.id) })
+        .then(() => toast('จัดลำดับสินค้าแล้ว'))
+        .catch((err) => toast((err && err.message) || 'จัดลำดับไม่สำเร็จ', true));
+    }
+  });
+
+  function openProduct(p) {
+    editing = p || null;
+    prodImage = undefined;
+    $('#prodTitle').textContent = p ? 'แก้ไขสินค้า · ' + p.name : 'เพิ่มสินค้า';
+    $('#p-name').value = p ? p.name : '';
+    $('#p-detail').value = p ? (p.detail || '') : '';
+    $('#p-price').value = p ? (p.price || 0) : 0;
+    $('#p-active').value = p ? String(p.active !== false) : 'true';
+    const mode = p ? (p.priceMode || 'one') : 'one';
+    document.querySelectorAll('input[name="pmode"]').forEach((r) => { r.checked = r.value === mode; });
+    sizes = p ? (p.sizes || []).map((s) => Array.isArray(s) ? { name: s[0], price: s[1] } : { name: s.name, price: s.price }) : [];
+    const th = $('#p-thumb');
+    const url = p ? Site.safeImg(p.image) : '';
+    th.innerHTML = url ? '<img src="' + url + '" alt="">' : 'ยังไม่มีรูป';
+    th.classList.toggle('has', !!url);
+    const usage = p && p.usage ? p.usage : { orders: 0, pending: 0 };
+    $('#p-usage').hidden = !usage.orders;
+    $('#p-usage').textContent = usage.orders
+      ? 'สินค้านี้มีคำสั่งซื้อแล้ว ' + usage.orders + ' รายการ (รอตรวจสอบ ' + usage.pending + ' รายการ) การแก้ราคาจะมีผลกับคำสั่งซื้อใหม่เท่านั้น คำสั่งซื้อเก่ายังใช้ราคาเดิม'
+      : '';
+    $('#p-delete').hidden = !p || !!usage.orders;
+    $('#err-prod').textContent = '';
+    syncMode();
+    $('#prodDlg').showModal();
+  }
+  $('#newProduct').addEventListener('click', () => openProduct(null));
+  $('#p-file').addEventListener('change', async (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    try {
+      const img = await Site.compressImage(f, { maxDim: 320, quality: 0.82, mime: 'image/jpeg', keepBelow: 0, maxBytes: 2 * 1024 * 1024 });
+      prodImage = { type: img.type, data: img.data };
+      $('#p-thumb').innerHTML = '<img src="data:' + img.type + ';base64,' + img.data + '" alt="">';
+      $('#p-thumb').classList.add('has');
+    } catch (err) { toast((err && err.message) || 'อ่านไฟล์รูปไม่สำเร็จ', true); }
+  });
+  $('#p-imgClear').addEventListener('click', () => {
+    prodImage = null;
+    $('#p-thumb').textContent = 'ลบเมื่อกดบันทึก';
+    $('#p-thumb').classList.remove('has');
+  });
+  $('#p-save').addEventListener('click', async () => {
+    $('#err-prod').textContent = '';
+    const payload = {
+      product: {
+        id: editing ? editing.id : '',
+        name: $('#p-name').value.trim(),
+        detail: $('#p-detail').value.trim(),
+        priceMode: document.querySelector('input[name="pmode"]:checked').value,
+        price: Number($('#p-price').value) || 0,
+        sizes: sizes.map((s) => [s.name, s.price]),
+        sortOrder: editing ? editing.sortOrder : (DATA.products.length + 1),
+        active: $('#p-active').value === 'true'
+      }
+    };
+    if (prodImage !== undefined) payload.image = prodImage;
+    const btn = $('#p-save');
+    btn.disabled = true; btn.textContent = 'กำลังบันทึก…';
+    try {
+      const r = await api('saveProduct', payload);
+      if (editing) {
+        const i = DATA.products.findIndex((x) => x.id === editing.id);
+        DATA.products[i] = r.product;
+      } else DATA.products.push(r.product);
+      renderProducts();
+      $('#prodDlg').close();
+      toast('บันทึกสินค้าแล้ว');
+    } catch (err) { $('#err-prod').textContent = (err && err.message) || 'บันทึกไม่สำเร็จ'; }
+    finally { btn.disabled = false; btn.textContent = 'บันทึก'; }
+  });
+  $('#p-delete').addEventListener('click', async () => {
+    if (!editing) return;
+    $('#err-prod').textContent = '';
+    try {
+      await api('deleteProduct', { id: editing.id });
+      DATA.products = DATA.products.filter((p) => p.id !== editing.id);
+      renderProducts();
+      $('#prodDlg').close();
+      toast('ลบสินค้าแล้ว');
+    } catch (err) { $('#err-prod').textContent = (err && err.message) || 'ลบไม่สำเร็จ'; }
+  });
+
+  /* ---------- เมนู 3 คำสั่งซื้อ ---------- */
+  function filteredOrders() {
+    const q = $('#of-q').value.trim().toLowerCase();
+    const st = $('#of-st').value;
+    const sort = $('#of-sort').value;
+    let list = (DATA.orders || []).filter((o) => {
+      if (st && o.status !== st) return false;
+      if (!q) return true;
+      return [o.no, o.firstName, o.lastName, o.phone, o.studentId, o.dept]
+        .some((v) => String(v || '').toLowerCase().indexOf(q) >= 0);
+    });
+    list.sort((a, b) => sort === 'total' ? (b.total - a.total)
+      : (sort === 'old' ? String(a.submittedAt).localeCompare(String(b.submittedAt))
+        : String(b.submittedAt).localeCompare(String(a.submittedAt))));
+    return list;
+  }
+  function renderOrders() {
+    const all = DATA.orders || [];
+    const pending = all.filter((o) => o.status === 'pending').length;
+    const badgeEl = $('#pendingCount');
+    badgeEl.textContent = pending;
+    badgeEl.className = 'count' + (pending ? '' : ' zero');
+    const list = filteredOrders();
+    window.__orders = list;
+    $('#orderCountNote').textContent = 'แสดง ' + list.length + ' จาก ' + all.length + ' รายการที่โหลดมา' +
+      (DATA.orderTotal && DATA.orderTotal > all.length ? ' (ทั้งระบบมี ' + DATA.orderTotal + ' รายการ)' : '');
+    $('#loadAll').hidden = !(DATA.orderTotal && DATA.orderTotal > all.length);
+    $('#orderRows').innerHTML = list.length ? list.map((o, i) =>
+      '<li class="row order">' +
+      '<div><div class="ordno">' + Site.esc(o.no) + '</div><div class="when">' + Site.esc(Site.thaiDate(String(o.submittedAt).slice(0, 10))) + '</div></div>' +
+      '<div><div class="who-name">' + Site.esc(o.firstName + ' ' + o.lastName) + '</div>' +
+      '<div class="mask">' + Site.esc(o.phone) + ' · ' + Site.esc(o.dept) + '</div></div>' +
+      '<div class="amt">' + Site.baht(o.total) + '<small>บาท</small></div>' +
+      '<div>' + badge(o.status) + '</div>' +
+      '<div><button class="btn sm primary" type="button" data-check="' + i + '">Check</button></div>' +
+      (o.dupOf ? '<p class="row-note">⚠️ อาจซ้ำกับคำสั่งซื้อ ' + Site.esc(o.dupOf) + '</p>' : '') +
+      (o.status === 'declined' && o.declineReason ? '<p class="row-note">เหตุผล: ' + Site.esc(o.declineReason) + '</p>' : '') +
+      '</li>').join('')
+      : '<div class="empty">ไม่มีคำสั่งซื้อที่ตรงกับตัวกรอง</div>';
+  }
+  ['of-q', 'of-st', 'of-sort'].forEach((id) => document.getElementById(id).addEventListener('input', renderOrders));
+  $('#loadAll').addEventListener('click', async () => {
+    try {
+      const r = await api('allOrders');
+      DATA.orders = r.orders;
+      renderOrders();
+      toast('โหลดครบทุกรายการแล้ว');
+    } catch (err) { toast((err && err.message) || 'โหลดไม่สำเร็จ', true); }
+  });
+
+  document.addEventListener('click', async (e) => {
+    const i = e.target.dataset && e.target.dataset.check;
+    if (i === undefined) return;
+    const o = (window.__orders || [])[Number(i)];
+    if (!o) return;
+    $('#checkTitle').textContent = 'ตรวจสอบคำสั่งซื้อ ' + o.no;
+    $('#checkBody').innerHTML = '<p class="notice">กำลังโหลดสลิป…</p>';
+    $('#checkFoot').innerHTML = '';
+    $('#checkDlg').showModal();
+    let d;
+    try {
+      d = demo
+        ? { order: o, items: [{ name: 'เสื้อกีฬาคณะ', size: 'L', unitPrice: 320, qty: 2, amount: 640 }, { name: 'เข็มขัดนักศึกษา', size: '', unitPrice: 180, qty: 1, amount: 180 }], slip: { error: 'โหมดตัวอย่าง: ไม่มีไฟล์สลิปจริง' } }
+        : await api('orderDetail', { no: o.no });
+    } catch (err) {
+      $('#checkBody').innerHTML = '<p class="notice bad">' + Site.esc((err && err.message) || 'โหลดไม่สำเร็จ') + '</p>';
+      return;
+    }
+    const slip = d.slip;
+    const slipHtml = !slip ? '<p class="notice bad">ไม่มีไฟล์สลิปในฐานข้อมูล</p>'
+      : slip.error ? '<p class="notice bad">' + Site.esc(slip.error) + '</p>'
+      : slip.data ? '<div class="slip"><img src="data:' + slip.mime + ';base64,' + slip.data + '" alt="สลิปการโอนเงิน"></div>'
+      : '<p class="notice warn">' + Site.esc(slip.note || '') + ' <a href="' + Site.esc(slip.url) + '" target="_blank" rel="noopener">เปิดใน Google Drive</a></p>';
+    const items = d.items || [];
+    $('#checkBody').innerHTML = slipHtml +
+      '<table class="itab"><thead><tr><th>สินค้า</th><th>ขนาด</th><th>จำนวน</th><th>รวม</th></tr></thead><tbody>' +
+      items.map((it) => '<tr><td>' + Site.esc(it.name) + '</td><td>' + Site.esc(it.size || '—') + '</td><td>' + it.qty + '</td><td>' + Site.baht(it.amount) + '</td></tr>').join('') +
+      '<tr class="sum"><td colspan="3">ยอดที่ระบบคำนวณ</td><td>' + Site.baht(d.order.total) + '</td></tr></tbody></table>' +
+      (d.order.clientTotal && Number(d.order.clientTotal) !== Number(d.order.total)
+        ? '<p class="notice warn">ยอดที่หน้าเว็บส่งมา (' + Site.baht(d.order.clientTotal) + ' บาท) ไม่ตรงกับยอดที่ระบบคำนวณ ระบบใช้ยอดของระบบเสมอ</p>' : '') +
+      '<dl class="dl"><dt>ผู้สั่งซื้อ</dt><dd>' + Site.esc(d.order.firstName + ' ' + d.order.lastName) + '</dd>' +
+      '<dt>เบอร์โทรศัพท์</dt><dd>' + Site.esc(d.order.phone) + '</dd>' +
+      '<dt>สาขาวิชา</dt><dd>' + Site.esc(d.order.dept) + '</dd>' +
+      '<dt>รหัสนักศึกษา</dt><dd>' + Site.esc(d.order.studentId || 'ไม่ได้ระบุ') + '</dd>' +
+      '<dt>วันที่โอนเงิน</dt><dd>' + Site.esc(Site.thaiDate(d.order.transferDate)) + '</dd>' +
+      '<dt>รหัสตรวจสอบ</dt><dd>' + Site.esc(d.order.code) + ' <span class="help" style="display:inline">(บอกนักศึกษาได้เมื่อยืนยันตัวตนแล้ว)</span></dd>' +
+      '<dt>สถานะปัจจุบัน</dt><dd>' + badge(d.order.status) + '</dd></dl>' +
+      '<div class="field" style="margin:0"><label for="reason">เหตุผล (จำเป็นเมื่อกด “การชำระเงินไม่สำเร็จ” เพราะนักศึกษาจะเห็นข้อความนี้)</label>' +
+      '<textarea id="reason" rows="2" placeholder="เช่น ยอดในสลิปไม่ตรงกับยอดรวม">' + Site.esc(d.order.declineReason || '') + '</textarea></div>' +
+      '<p class="err" id="err-decide"></p>';
+    $('#checkFoot').innerHTML =
+      '<button type="button" class="btn" data-close="checkDlg">ปิด</button>' +
+      (d.order.status !== 'pending' ? '<button type="button" class="btn" data-decide="pending">กลับเป็นรอตรวจสอบ</button>' : '') +
+      '<button type="button" class="btn danger" data-decide="declined">การชำระเงินไม่สำเร็จ</button>' +
+      '<button type="button" class="btn primary" data-decide="approved">ตรวจสอบแล้ว</button>';
+    $('#checkFoot').dataset.no = o.no;
+  });
+
+  document.addEventListener('click', async (e) => {
+    const decision = e.target.dataset && e.target.dataset.decide;
+    if (!decision) return;
+    const no = $('#checkFoot').dataset.no;
+    const reason = ($('#reason') || {}).value || '';
+    if (decision === 'declined' && !reason.trim()) {
+      $('#err-decide').textContent = 'โปรดระบุเหตุผล เพราะนักศึกษาจะเห็นข้อความนี้';
+      return;
+    }
+    e.target.disabled = true;
+    try {
+      if (!demo) await api('decide', { no: no, decision: decision, reason: reason });
+      const o = (DATA.orders || []).find((x) => x.no === no);
+      if (o) { o.status = decision; o.declineReason = decision === 'declined' ? reason : ''; }
+      renderOrders();
+      $('#checkDlg').close();
+      toast('บันทึกผลการตรวจสอบ ' + no + ' แล้ว');
+    } catch (err) {
+      $('#err-decide').textContent = (err && err.message) || 'บันทึกไม่สำเร็จ';
+    } finally { e.target.disabled = false; }
+  });
+
+  /* ---------- เมนู 4 Export ---------- */
+  function fillCsvFilters() {
+    const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+    const m = $('#cv-month');
+    m.replaceChildren(new Option('ทุกเดือน', ''));
+    months.forEach((name, i) => m.add(new Option(name, String(i + 1))));
+    const y = $('#cv-year');
+    const thisYear = new Date().getFullYear() + 543;
+    y.replaceChildren(new Option('ทุกปี', ''));
+    for (let i = 0; i < 4; i++) y.add(new Option(String(thisYear - i), String(thisYear - i)));
+    const d = $('#cv-dept');
+    d.replaceChildren(new Option('ทุกสาขา', ''));
+    (DATA.config.depts || []).forEach((x) => d.add(new Option(x.name, x.name)));
+  }
+  document.addEventListener('click', async (e) => {
+    const kind = e.target.dataset && e.target.dataset.csv;
+    if (!kind) return;
+    $('#err-csv').textContent = '';
+    e.target.disabled = true;
+    const label = e.target.textContent;
+    e.target.textContent = 'กำลังสร้างไฟล์…';
+    try {
+      const r = await api('exportCsv', {
+        kind: kind,
+        filters: { month: $('#cv-month').value, year: $('#cv-year').value, dept: $('#cv-dept').value, status: $('#cv-status').value }
+      });
+      // ใส่ BOM เพื่อให้ Excel อ่านภาษาไทยถูกต้อง
+      const blob = new Blob(['﻿' + r.csv], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = r.filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      toast('ดาวน์โหลด ' + r.filename + ' (' + r.count + ' แถว)');
+    } catch (err) { $('#err-csv').textContent = (err && err.message) || 'สร้างไฟล์ไม่สำเร็จ'; }
+    finally { e.target.disabled = false; e.target.textContent = label; }
+  });
+
+  /* ---------- เปลี่ยนรหัสผ่าน ---------- */
+  $('#pwBtn').addEventListener('click', () => {
+    ['pw-old', 'pw-new', 'pw-new2'].forEach((id) => { document.getElementById(id).value = ''; });
+    $('#err-pw').textContent = '';
+    $('#pwDlg').showModal();
+  });
+  $('#pw-save').addEventListener('click', async () => {
+    const a = $('#pw-new').value, b = $('#pw-new2').value;
+    if (a.length < 8) { $('#err-pw').textContent = 'รหัสผ่านใหม่ต้องยาวอย่างน้อย 8 ตัวอักษร'; return; }
+    if (a !== b) { $('#err-pw').textContent = 'รหัสผ่านใหม่ทั้งสองช่องไม่ตรงกัน'; return; }
+    try {
+      const r = await api('changePassword', { oldPassword: $('#pw-old').value, newPassword: a });
+      TOKEN = r.token;
+      $('#pwWarn').hidden = true;
+      $('#pwDlg').close();
+      toast('เปลี่ยนรหัสผ่านแล้ว เครื่องอื่นที่ค้างอยู่ถูกออกจากระบบทั้งหมด');
+    } catch (err) { $('#err-pw').textContent = (err && err.message) || 'เปลี่ยนรหัสผ่านไม่สำเร็จ'; }
+  });
+
+  /* ---------- แท็บและกล่อง ---------- */
+  document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+    ['m1', 'm2', 'm3', 'm4'].forEach((id) => { document.getElementById(id).hidden = (id !== b.dataset.m); });
+    $('#saveBar').hidden = !(b.dataset.m === 'm1' && dirty);
+  }));
+  document.addEventListener('click', (e) => {
+    const id = e.target.dataset && e.target.dataset.close;
+    if (id) document.getElementById(id).close();
+  });
+  window.addEventListener('beforeunload', (e) => {
+    if (dirty) { e.preventDefault(); e.returnValue = ''; }
+  });
+</script>
+</body>
+</html>
