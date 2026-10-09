@@ -51,6 +51,8 @@
   .btn.danger { border-color: var(--danger); color: var(--danger); }
   .btn.danger:hover:not(:disabled) { background: var(--danger); color: #fff; }
   .btn.sm { min-height: 40px; padding: 0 14px; font-size: 0.9063rem; }
+  label.btn.disabled { border-color: var(--line); color: #8a9aa6; background: #f3f6f5; cursor: not-allowed; }
+  label.btn.disabled:hover { background: #f3f6f5; color: #8a9aa6; }
 
   .wrap { max-width: 1180px; margin: 0 auto; padding: 8px 16px 110px; }
   .login { max-width: 420px; margin: 40px auto; }
@@ -328,6 +330,7 @@
     <div class="field"><label for="p-name">ชื่อสินค้า</label><input type="text" id="p-name"></div>
     <div class="field"><label for="p-detail">รายละเอียดสั้น <span style="font-weight:400;color:var(--ink-soft)">(ไม่บังคับ)</span></label><input type="text" id="p-detail"></div>
     <div class="field" id="p-imageBox">
+      <p class="notice warn" id="p-needSave" hidden style="margin-bottom:12px">กด <b>บันทึก</b> ด้านล่างก่อน แล้วกล่องนี้จะเปิดให้อัปโหลดรูปสินค้าและตารางขนาดได้ทันที (รูปต้องผูกกับรหัสสินค้า)</p>
       <span class="label">รูปสินค้า <span style="font-weight:400;color:var(--ink-soft)">(ไม่บังคับ สูงสุด <span id="p-maxPhotos">4</span> รูป)</span></span>
       <div class="gallery" id="p-photos"></div>
       <div class="row-actions" style="margin-top:8px">
@@ -707,9 +710,10 @@
     const mode = p ? (p.priceMode || 'one') : 'one';
     document.querySelectorAll('input[name="pmode"]').forEach((r) => { r.checked = r.value === mode; });
     sizes = p ? (p.sizes || []).map((s) => Array.isArray(s) ? { name: s[0], price: s[1] } : { name: s.name, price: s.price }) : [];
-    // รูปจัดการได้เฉพาะสินค้าที่บันทึกแล้ว (ต้องมีรหัสสินค้าก่อนถึงผูกรูปได้)
-    $('#p-imageBox').hidden = !p;
+    // รูปต้องผูกกับรหัสสินค้า สินค้าใหม่จึงอัปโหลดรูปไม่ได้จนกว่าจะกดบันทึกครั้งแรก
+    // แต่ยังแสดงส่วนนี้ไว้เสมอ พร้อมบอกเหตุผล ไม่ใช่ซ่อนหายไปเฉย ๆ
     $('#p-maxPhotos').textContent = DATA.maxPhotos || 4;
+    $('#p-needSave').hidden = !!p;
     $('#err-img').textContent = '';
     images = [];
     renderGallery(p ? 'loading' : 'none');
@@ -722,7 +726,7 @@
     $('#p-delete').hidden = !p || !!usage.orders;
     $('#err-prod').textContent = '';
     syncMode();
-    $('#prodDlg').showModal();
+    if (!$('#prodDlg').open) $('#prodDlg').showModal();   // เรียกซ้ำตอนสลับเป็นโหมดแก้ไขได้โดยกล่องไม่ error
   }
   $('#newProduct').addEventListener('click', () => openProduct(null));
 
@@ -741,9 +745,13 @@
       : (placeholder || '<div class="gempty">ยังไม่มีรูปสินค้า</div>');
     $('#p-size').innerHTML = size.length ? size.map((im) => card(im, '')).join('')
       : (placeholder || '<div class="gempty">ยังไม่มีตารางขนาด</div>');
-    const full = photos.length >= (DATA.maxPhotos || 4);
-    document.querySelector('label[for="p-file"]').classList.toggle('disabled', full);
+    // ปุ่มอัปโหลดใช้ไม่ได้เมื่อยังไม่ได้บันทึกสินค้า หรือรูปครบจำนวนแล้ว
+    const locked = !editing;
+    const full = locked || photos.length >= (DATA.maxPhotos || 4);
     $('#p-file').disabled = full;
+    $('#p-sizefile').disabled = locked;
+    document.querySelector('label[for="p-file"]').classList.toggle('disabled', full);
+    document.querySelector('label[for="p-sizefile"]').classList.toggle('disabled', locked);
   }
   async function loadImages(p) {
     if (demo) { images = []; renderGallery(''); return; }
@@ -817,13 +825,20 @@
     btn.disabled = true; btn.textContent = 'กำลังบันทึก…';
     try {
       const r = await api('saveProduct', payload);
+      const isNew = !editing;
       if (editing) {
         const i = DATA.products.findIndex((x) => x.id === editing.id);
         DATA.products[i] = r.product;
       } else DATA.products.push(r.product);
       renderProducts();
-      $('#prodDlg').close();
-      toast('บันทึกสินค้าแล้ว');
+      if (isNew) {
+        // สินค้าใหม่: ไม่ปิดกล่อง แต่สลับเป็นโหมดแก้ไขทันที เจ้าหน้าที่จะได้อัปโหลดรูปต่อได้เลย
+        openProduct(DATA.products[DATA.products.length - 1]);
+        toast('บันทึกสินค้าแล้ว ตอนนี้อัปโหลดรูปสินค้าและตารางขนาดได้');
+      } else {
+        $('#prodDlg').close();
+        toast('บันทึกสินค้าแล้ว');
+      }
     } catch (err) { $('#err-prod').textContent = (err && err.message) || 'บันทึกไม่สำเร็จ'; }
     finally { btn.disabled = false; btn.textContent = 'บันทึก'; }
   });

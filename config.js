@@ -6,7 +6,7 @@
  *         ถ้าเว้นว่าง ทุกหน้าจะทำงานในโหมดตัวอย่าง (ไม่ส่งข้อมูลจริง)
  */
 window.STORE_CONFIG = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycbypaqGD1bdWAzOcmkFYlIjQI16BmlgrB8_iXQLwY5ge7cRpH8S4k5gAXJLdqaCh07bduA/exec',
+  apiUrl: 'https://script.google.com/macros/s/AKfycby89Wnm93OBCMATbze5Fzi9kw6WiyvU4Cw4fAG4ex7Wzbn8a0XF6hO_CzRsVsRwHpr2Ag/exec',
 
   // ชื่อไฟล์ของแต่ละหน้า (เปลี่ยนเฉพาะกรณีวางไฟล์คนละที่หรือเปลี่ยนชื่อไฟล์)
   pages: {
