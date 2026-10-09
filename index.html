@@ -6,6 +6,9 @@
 <title>สั่งซื้ออุปกรณ์การเรียน คณะวิทยาศาสตร์และเทคโนโลยี มทร.รัตนโกสินทร์</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- เปิดการเชื่อมต่อไปหลังบ้านไว้ล่วงหน้า ลดเวลารอตอนโหลดสินค้าและตอนส่งคำสั่งซื้อ -->
+<link rel="preconnect" href="https://script.google.com" crossorigin>
+<link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
 <!-- โหลดฟอนต์แบบไม่ขวางการแสดงผล: หน้าเว็บขึ้นก่อน แล้วฟอนต์ค่อยมาแทน -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Noto+Serif+Thai:wght@600;700&display=swap" media="print" onload="this.media='all';this.onload=null">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Noto+Serif+Thai:wght@600;700&display=swap"></noscript>
@@ -523,11 +526,15 @@
     setTimeout(() => (e.target.textContent = 'คัดลอกเลขที่บัญชี'), 1800);
   });
 
-  /* สลิป */
+  /* สลิป
+     ย่อรูปทันทีที่เลือกไฟล์ ไม่ต้องรอตอนกดส่ง เพราะรูปจากกล้องมือถือใช้เวลาย่อหลายร้อยมิลลิวินาที
+     ตอนกดส่งจึงมีไฟล์ที่ย่อแล้วรออยู่ กดแล้วส่งได้เลย */
   const slip = $('#slip');
   let slipURL = null;
+  let slipReady = null;    // Promise ของรูปที่ย่อแล้ว
   function clearSlip() {
     slip.value = '';
+    slipReady = null;
     if (slipURL) { URL.revokeObjectURL(slipURL); slipURL = null; }
     $('#slipPrev').hidden = true;
   }
@@ -545,6 +552,10 @@
     $('#slipImg').src = slipURL;
     $('#slipName').textContent = f.name;
     $('#slipPrev').hidden = false;
+    slipReady = Site.compressImage(f, { maxDim: 1600, quality: 0.8, mime: 'image/jpeg', keepBelow: 500 * 1024, maxBytes: 5 * 1024 * 1024 });
+    slipReady.then((img) => {
+      $('#slipName').textContent = f.name + ' · ' + Math.round(img.size / 1024) + ' KB (ย่อแล้ว)';
+    }).catch(() => { /* ย่อไม่ได้ก็ค่อยลองใหม่ตอนกดส่ง */ });
   });
   $('#slipRemove').addEventListener('click', () => { clearSlip(); slip.focus(); });
 
@@ -576,7 +587,8 @@
   /* ส่งคำสั่งซื้อ */
   let lastOrder = null;
   async function send(total) {
-    const slipData = await Site.compressImage(slip.files[0], { maxDim: 2000, quality: 0.85, mime: 'image/jpeg', keepBelow: 900 * 1024, maxBytes: 5 * 1024 * 1024 });
+    // ปกติรูปย่อเสร็จตั้งแต่ตอนเลือกไฟล์แล้ว ตรงนี้จึงแทบไม่ต้องรอ
+    const slipData = await (slipReady || Site.compressImage(slip.files[0], { maxDim: 1600, quality: 0.8, mime: 'image/jpeg', keepBelow: 500 * 1024, maxBytes: 5 * 1024 * 1024 }));
     const items = [];
     (SHOP.products || []).forEach((p) => {
       const c = cart[p.id];
@@ -651,6 +663,9 @@
     $('#mobar').hidden = true;
     $('#doneTitle').focus();
     window.scrollTo({ top: 0 });
+    // ดาวน์โหลดใบยืนยันให้อัตโนมัติ นักศึกษาจะได้มีหลักฐานติดเครื่องไว้โดยไม่ต้องกดเอง
+    // รอให้หน้าวาดเสร็จก่อนหนึ่งเฟรม เพื่อให้ฟอนต์ที่โหลดแล้วถูกใช้ในรูปด้วย
+    setTimeout(() => makeReceipt(true), 120);
   }
 
   $('#copyCode').addEventListener('click', async (e) => {
@@ -659,8 +674,10 @@
     setTimeout(() => (e.target.textContent = 'คัดลอกรหัส'), 1800);
   });
 
-  /* บันทึกเป็นรูป: วาดใบยืนยันลง canvas แล้วดาวน์โหลด (บนมือถือให้กดค้างที่รูปเพื่อบันทึก) */
-  $('#saveImg').addEventListener('click', () => {
+  /* ใบยืนยัน: วาดลง canvas แล้วดาวน์โหลด
+     ระบบเรียกให้อัตโนมัติทันทีที่ส่งคำสั่งซื้อสำเร็จ และกดปุ่มเรียกซ้ำได้
+     บางเบราว์เซอร์บนมือถือไม่ยอมให้ดาวน์โหลดอัตโนมัติ จึงแสดงรูปไว้ให้กดค้างบันทึกเองด้วยเสมอ */
+  function makeReceipt(auto) {
     if (!lastOrder) return;
     const W = 640, H = 250 + Math.max(1, lastOrder.lines.length) * 26 + 120;
     const c = document.createElement('canvas');
@@ -702,19 +719,28 @@
     g.fillText('วันที่สั่งซื้อ ' + Site.thaiDate(lastOrder.date), 32, y + 52);
     g.fillText('ตรวจสอบสถานะที่หน้าตรวจสอบคำสั่งซื้อ ด้วยรหัส 6 หลักและเบอร์โทร 4 ตัวท้าย', 32, y + 74);
 
-    const url = c.toDataURL('image/png');
-    $('#captureImg').src = url;
+    $('#captureImg').src = c.toDataURL('image/png');
     $('#capture').hidden = false;
     try {
-      const a = document.createElement('a');
-      a.href = url; a.download = 'คำสั่งซื้อ-' + lastOrder.no + '.png';
-      document.body.appendChild(a); a.click(); a.remove();
-      $('#captureNote').textContent = 'ถ้าไฟล์ไม่ถูกดาวน์โหลด ให้กดค้างที่รูปแล้วเลือกบันทึกรูปภาพ';
+      // ดาวน์โหลดผ่าน blob: และตั้งชื่อไฟล์เป็นอักษรอังกฤษ
+      // เพราะบางเบราว์เซอร์ไม่ยอมใช้ชื่อไฟล์ภาษาไทยหรือไม่ยอมดาวน์โหลดจาก data: โดยตรง
+      c.toBlob((blob) => {
+        if (!blob) return;
+        const u = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = u; a.download = 'order-' + lastOrder.no + '.png';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(u), 4000);
+      }, 'image/png');
+      $('#captureNote').textContent = auto
+        ? 'ระบบดาวน์โหลดใบยืนยันให้แล้ว ถ้าไม่พบไฟล์ ให้กดค้างที่รูปแล้วเลือกบันทึกรูปภาพ'
+        : 'ถ้าไฟล์ไม่ถูกดาวน์โหลด ให้กดค้างที่รูปแล้วเลือกบันทึกรูปภาพ';
     } catch (x) {
       $('#captureNote').textContent = 'กดค้างที่รูปแล้วเลือกบันทึกรูปภาพ';
     }
-    $('#capture').scrollIntoView({ block: 'nearest' });
-  });
+    if (!auto) $('#capture').scrollIntoView({ block: 'nearest' });
+  }
+  $('#saveImg').addEventListener('click', () => makeReceipt(false));
 
   $('#againBtn').addEventListener('click', () => {
     $('#orderForm').reset();

@@ -490,9 +490,9 @@
         depts: [{ name: 'วิทยาการคอมพิวเตอร์' }, { name: 'เคมี' }, { name: 'เทคโนโลยีการอาหาร', hidden: true }]
       },
       products: [
-        { id: 'P001', name: 'เข็มขัดนักศึกษา', detail: 'หัวเข็มขัดตรามหาวิทยาลัย', priceMode: 'one', price: 180, sizes: [], sortOrder: 1, active: true, image: '', usage: { orders: 30, pending: 2 } },
-        { id: 'P002', name: 'เสื้อกีฬาคณะ', detail: 'ผ้าไมโคร สีกรมท่า', priceMode: 'each', price: 320, sortOrder: 2, active: true, image: '',
-          sizes: [['S', 320], ['M', 320], ['L', 320], ['XL', 340], ['2XL', 360]], usage: { orders: 48, pending: 4 } }
+        { id: 'P001', name: 'เข็มขัดนักศึกษา', detail: 'หัวเข็มขัดตรามหาวิทยาลัย', priceMode: 'one', price: 180, sizes: [], sortOrder: 1, active: true, hasImage: false, usage: { orders: 30, qty: 44 } },
+        { id: 'P002', name: 'เสื้อกีฬาคณะ', detail: 'ผ้าไมโคร สีกรมท่า', priceMode: 'each', price: 320, sortOrder: 2, active: true, hasImage: false,
+          sizes: [['S', 320], ['M', 320], ['L', 320], ['XL', 340], ['2XL', 360]], usage: { orders: 48, qty: 61 } }
       ],
       orders: [
         { no: 'ST69001', code: '482913', submittedAt: '2026-10-03T04:00:00Z', dept: 'วิทยาการคอมพิวเตอร์', studentId: '2565010112',
@@ -621,9 +621,10 @@
   }
   function renderProducts() {
     const list = DATA.products || [];
+    // ไม่โหลดรูปสินค้ามาพร้อมหน้ารายการ (ดูได้ตอนกดแก้ไข) หน้าแรกจึงเปิดเร็วแม้สินค้าเยอะ
     $('#productRows').innerHTML = list.length ? list.map((p, i) =>
       '<li class="row product">' +
-      '<div class="pthumb">' + (Site.safeImg(p.image) ? '<img src="' + Site.safeImg(p.image) + '" alt="">' : 'รูป') + '</div>' +
+      '<div class="pthumb">' + (p.hasImage ? 'มีรูป' : 'ไม่มีรูป') + '</div>' +
       '<div><div class="who-name">' + Site.esc(p.name) + '</div>' +
       '<div class="mask">' + Site.esc(priceText(p)) + '</div>' +
       '<div class="mask">มีคำสั่งซื้อแล้ว ' + ((p.usage && p.usage.orders) || 0) + ' รายการ</div></div>' +
@@ -693,13 +694,21 @@
     document.querySelectorAll('input[name="pmode"]').forEach((r) => { r.checked = r.value === mode; });
     sizes = p ? (p.sizes || []).map((s) => Array.isArray(s) ? { name: s[0], price: s[1] } : { name: s.name, price: s.price }) : [];
     const th = $('#p-thumb');
-    const url = p ? Site.safeImg(p.image) : '';
-    th.innerHTML = url ? '<img src="' + url + '" alt="">' : 'ยังไม่มีรูป';
-    th.classList.toggle('has', !!url);
-    const usage = p && p.usage ? p.usage : { orders: 0, pending: 0 };
+    th.innerHTML = p && p.hasImage ? 'กำลังโหลดรูป…' : 'ยังไม่มีรูป';
+    th.classList.toggle('has', !!(p && p.hasImage));
+    if (p && p.hasImage && !demo) {
+      // โหลดรูปเฉพาะตอนเปิดกล่องนี้ ไม่ขนมาพร้อมรายการสินค้าทั้งหมด
+      api('productImage', { id: p.id }).then((r) => {
+        if (editing !== p) return;
+        const url = Site.safeImg(r.image);
+        th.innerHTML = url ? '<img src="' + url + '" alt="">' : 'ยังไม่มีรูป';
+        th.classList.toggle('has', !!url);
+      }).catch(() => { th.textContent = 'โหลดรูปไม่สำเร็จ'; });
+    }
+    const usage = p && p.usage ? p.usage : { orders: 0, qty: 0 };
     $('#p-usage').hidden = !usage.orders;
     $('#p-usage').textContent = usage.orders
-      ? 'สินค้านี้มีคำสั่งซื้อแล้ว ' + usage.orders + ' รายการ (รอตรวจสอบ ' + usage.pending + ' รายการ) การแก้ราคาจะมีผลกับคำสั่งซื้อใหม่เท่านั้น คำสั่งซื้อเก่ายังใช้ราคาเดิม'
+      ? 'สินค้านี้มีคำสั่งซื้อแล้ว ' + usage.orders + ' รายการ (รวม ' + usage.qty + ' ชิ้น) การแก้ราคาจะมีผลกับคำสั่งซื้อใหม่เท่านั้น คำสั่งซื้อเก่ายังใช้ราคาเดิม'
       : '';
     $('#p-delete').hidden = !p || !!usage.orders;
     $('#err-prod').textContent = '';
@@ -711,7 +720,8 @@
     const f = e.target.files[0];
     if (!f) return;
     try {
-      const img = await Site.compressImage(f, { maxDim: 320, quality: 0.82, mime: 'image/jpeg', keepBelow: 0, maxBytes: 2 * 1024 * 1024 });
+      // รูปสินค้าถูกส่งไปกับหน้าสั่งซื้อของนักศึกษาทุกคน จึงย่อให้เล็กที่สุดเท่าที่ยังดูรู้เรื่อง
+      const img = await Site.compressImage(f, { maxDim: 320, quality: 0.72, mime: 'image/jpeg', keepBelow: 0, maxBytes: 2 * 1024 * 1024 });
       prodImage = { type: img.type, data: img.data };
       $('#p-thumb').innerHTML = '<img src="data:' + img.type + ';base64,' + img.data + '" alt="">';
       $('#p-thumb').classList.add('has');
