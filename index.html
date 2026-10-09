@@ -111,6 +111,24 @@
   .stepper input { width: 52px; border: 0; text-align: center; background: transparent; padding: 0; min-height: 44px; font-variant-numeric: tabular-nums; font-weight: 600; -moz-appearance: textfield; }
   .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   .linetot { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--teal-dark); font-weight: 600; }
+  .pthumb.tappable { cursor: zoom-in; position: relative; }
+  .pthumb .more { position: absolute; right: 4px; bottom: 4px; background: rgba(18,39,59,.78); color: #fff;
+    font-size: 0.75rem; line-height: 1.6; padding: 0 7px; border-radius: 999px; }
+  .plinks { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 8px; }
+  .plink { background: none; border: 0; padding: 6px 0; min-height: 38px; cursor: pointer;
+    color: var(--teal-dark); font-size: 0.9375rem; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+  /* กล่องดูรูปสินค้าและตารางขนาด */
+  .viewer { position: fixed; inset: 0; z-index: 60; background: rgba(18,39,59,.93); display: grid; grid-template-rows: auto 1fr auto; }
+  .viewer header { display: flex; align-items: center; gap: 12px; padding: 12px 16px calc(12px + env(safe-area-inset-top, 0px)); color: #fff; }
+  .viewer header h2 { font-size: 1.0625rem; font-family: var(--sans); font-weight: 600; flex: 1; min-width: 0; }
+  .viewer .x { width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,.16); color: #fff; font-size: 1.3rem; cursor: pointer; flex: none; }
+  .viewer .stage { overflow: auto; padding: 0 16px; display: grid; place-items: center; min-height: 40vh; }
+  .viewer .stage img { max-width: 100%; border-radius: 12px; background: #fff; display: block; }
+  .viewer .stage p { color: #fff; opacity: .85; }
+  .viewer footer { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0px)); }
+  .vdot { min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1.5px solid rgba(255,255,255,.4);
+    background: transparent; color: #fff; font-size: 0.9063rem; cursor: pointer; }
+  .vdot[aria-pressed="true"] { background: #fff; color: var(--ink); border-color: #fff; font-weight: 600; }
   .empty-products { border: 1px dashed var(--line); border-radius: 12px; padding: 24px; text-align: center; color: var(--ink-soft); }
 
   .field { margin-bottom: 16px; }
@@ -360,6 +378,15 @@
   </div>
 </main>
 
+<div class="viewer" id="viewer" hidden>
+  <header>
+    <h2 id="viewerTitle">รูปสินค้า</h2>
+    <button type="button" class="x" id="viewerClose" aria-label="ปิด">✕</button>
+  </header>
+  <div class="stage" id="viewerStage"><p>กำลังโหลดรูป…</p></div>
+  <footer id="viewerTabs"></footer>
+</div>
+
 <div class="mobar" id="mobar">
   <div><div class="n" id="mobarN">ยังไม่ได้เลือกสินค้า</div><div class="t"><span id="mobarT">0</span> บาท</div></div>
   <button type="button" class="btn primary" id="mobarBtn">ส่งคำสั่งซื้อ</button>
@@ -393,8 +420,10 @@
       { id: 'P001', name: 'กระเป๋าผ้าคณะ', detail: 'ผ้าแคนวาส สกรีนตราคณะ', price: 250, sizes: [], minPrice: 250, maxPrice: 250, image: '' },
       { id: 'P002', name: 'เข็มขัดนักศึกษา', detail: 'หัวเข็มขัดตรามหาวิทยาลัย', price: 180, sizes: [], minPrice: 180, maxPrice: 180, image: '' },
       { id: 'P003', name: 'เสื้อกีฬาคณะ', detail: 'ผ้าไมโครโพลีเอสเตอร์ สีกรมท่า ปักตราคณะ', price: 320, minPrice: 320, maxPrice: 360, image: '',
+        photoCount: 2, hasSizeChart: true,
         sizes: [{ name: 'S', price: 320 }, { name: 'M', price: 320 }, { name: 'L', price: 320 }, { name: 'XL', price: 340 }, { name: '2XL', price: 360 }] },
       { id: 'P004', name: 'กางเกงวอร์มคณะ', detail: 'ผ้าวอร์มอย่างดี ขายาว มีกระเป๋าข้าง', price: 420, minPrice: 420, maxPrice: 420, image: '',
+        photoCount: 2, hasSizeChart: true,
         sizes: [{ name: 'S', price: 420 }, { name: 'M', price: 420 }, { name: 'L', price: 420 }, { name: 'XL', price: 420 }] }
     ]
   };
@@ -423,8 +452,13 @@
       if (!cart[p.id]) cart[p.id] = { qty: 0, size: p.sizes && p.sizes.length ? p.sizes[0].name : '' };
       const c = cart[p.id];
       const img = Site.safeImg(p.image);
+      const nPhotos = Number(p.photoCount) || 0;
+      const canView = nPhotos > 0 || p.hasSizeChart;
       return '<div class="prod" id="prod-' + Site.esc(p.id) + '">' +
-        '<div class="pthumb">' + (img ? '<img src="' + img + '" alt="">' : 'รูปสินค้า') + '</div>' +
+        '<div class="pthumb' + (canView ? ' tappable' : '') + '"' +
+          (canView ? ' data-view="' + Site.esc(p.id) + '" data-viewkind="photo" role="button" tabindex="0" aria-label="ดูรูปของ ' + Site.esc(p.name) + '"' : '') + '>' +
+          (img ? '<img src="' + img + '" alt="">' : 'รูปสินค้า') +
+          (nPhotos > 1 ? '<span class="more">+' + (nPhotos - 1) + '</span>' : '') + '</div>' +
         '<div style="min-width:0">' +
           '<h3>' + Site.esc(p.name) + '</h3>' +
           (p.detail ? '<p class="desc">' + Site.esc(p.detail) + '</p>' : '') +
@@ -440,7 +474,14 @@
               '<button type="button" data-step="' + Site.esc(p.id) + '" data-d="1" aria-label="เพิ่มจำนวน">+</button>' +
             '</span>' +
             '<span class="linetot" data-line="' + Site.esc(p.id) + '"></span>' +
-          '</div></div></div>';
+          '</div>' +
+          (canView
+            ? '<div class="plinks">' +
+              (nPhotos > 0 ? '<button type="button" class="plink" data-view="' + Site.esc(p.id) + '" data-viewkind="photo">ดูรูปสินค้า' + (nPhotos > 1 ? ' (' + nPhotos + ' รูป)' : '') + '</button>' : '') +
+              (p.hasSizeChart ? '<button type="button" class="plink" data-view="' + Site.esc(p.id) + '" data-viewkind="size">📏 ตารางขนาด</button>' : '') +
+              '</div>'
+            : '') +
+          '</div></div>';
     }).join('');
     recalc();
   }
@@ -503,6 +544,88 @@
       if (!cached) $('#plist').innerHTML = '<div class="empty-products">โหลดรายการสินค้าไม่สำเร็จ โปรดรีเฟรชหน้าอีกครั้ง</div>';
     });
   })();
+
+  /* ---------- ดูรูปสินค้าและตารางขนาด ----------
+     รูปเต็มไม่ได้ส่งมาพร้อมหน้าเว็บ แต่โหลดตอนกดดู แล้วจำไว้ใช้ซ้ำในหน้านี้
+     หน้าสั่งซื้อจึงเปิดเร็วเท่าเดิมแม้สินค้าจะมีรูปหลายรูป */
+  const mediaCache = {};
+  let viewerKind = 'photo';
+  let viewerList = [];
+  let viewerIndex = 0;
+
+  async function loadMedia(productId) {
+    if (mediaCache[productId]) return mediaCache[productId];
+    if (demo) {
+      // โหมดตัวอย่าง: วาดรูปแทนที่ของจริง เพื่อให้ดูการทำงานได้โดยไม่ต้องมีหลังบ้าน
+      const draw = (text, w, h, bg) => {
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        const g = c.getContext('2d');
+        g.fillStyle = bg; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#12273b'; g.font = '600 28px "IBM Plex Sans Thai", sans-serif'; g.textAlign = 'center';
+        g.fillText(text, w / 2, h / 2);
+        return c.toDataURL('image/png');
+      };
+      mediaCache[productId] = [
+        { id: 'd1', kind: 'photo', url: draw('รูปสินค้า 1 (ตัวอย่าง)', 900, 900, '#e4f1ee') },
+        { id: 'd2', kind: 'photo', url: draw('รูปสินค้า 2 (ตัวอย่าง)', 900, 900, '#fff1cc') },
+        { id: 'd3', kind: 'size', url: draw('ตารางขนาด (ตัวอย่าง)', 1000, 700, '#ffffff') }
+      ];
+      return mediaCache[productId];
+    }
+    const r = await Site.get('media', { id: productId });
+    mediaCache[productId] = r.images || [];
+    return mediaCache[productId];
+  }
+
+  function renderViewer() {
+    const stage = $('#viewerStage');
+    if (!viewerList.length) {
+      stage.innerHTML = '<p>ยังไม่มีรูปสำหรับรายการนี้</p>';
+      $('#viewerTabs').innerHTML = '';
+      return;
+    }
+    const im = viewerList[Math.min(viewerIndex, viewerList.length - 1)];
+    stage.innerHTML = '<img src="' + im.url + '" alt="' + (viewerKind === 'size' ? 'ตารางขนาด' : 'รูปสินค้า') + '">';
+    $('#viewerTabs').innerHTML = viewerList.length > 1
+      ? viewerList.map((x, i) => '<button type="button" class="vdot" data-vi="' + i + '" aria-pressed="' + (i === viewerIndex) + '">' + (i + 1) + '</button>').join('')
+      : '';
+  }
+
+  async function openViewer(productId, kind) {
+    const p = (SHOP.products || []).find((x) => x.id === productId);
+    viewerKind = kind === 'size' ? 'size' : 'photo';
+    viewerIndex = 0;
+    viewerList = [];
+    $('#viewerTitle').textContent = (viewerKind === 'size' ? 'ตารางขนาด · ' : '') + (p ? p.name : 'รูปสินค้า');
+    $('#viewerStage').innerHTML = '<p>กำลังโหลดรูป…</p>';
+    $('#viewerTabs').innerHTML = '';
+    $('#viewer').hidden = false;
+    $('#viewerClose').focus();
+    try {
+      const all = await loadMedia(productId);
+      viewerList = all.filter((x) => x.kind === viewerKind);
+      renderViewer();
+    } catch (err) {
+      $('#viewerStage').innerHTML = '<p>โหลดรูปไม่สำเร็จ โปรดลองใหม่อีกครั้ง</p>';
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest ? e.target.closest('[data-view]') : null;
+    if (t) { openViewer(t.dataset.view, t.dataset.viewkind); return; }
+    const vi = e.target.dataset && e.target.dataset.vi;
+    if (vi !== undefined) { viewerIndex = Number(vi); renderViewer(); }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !$('#viewer').hidden) $('#viewer').hidden = true;
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.dataset && e.target.dataset.view) {
+      e.preventDefault();
+      openViewer(e.target.dataset.view, e.target.dataset.viewkind);
+    }
+  });
+  $('#viewerClose').addEventListener('click', () => { $('#viewer').hidden = true; });
+  $('#viewer').addEventListener('click', (e) => { if (e.target.id === 'viewer') $('#viewer').hidden = true; });
 
   /* วันที่โอน: ระบบใส่วันนี้ให้ แก้ได้ */
   const dateInput = $('#transferDate');

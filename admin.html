@@ -94,6 +94,14 @@
   .thumb img { width: 100%; height: 100%; object-fit: contain; background: #fff; display: block; }
   .thumb.has { border-style: solid; }
   .img-row { display: flex; gap: 14px; align-items: flex-start; }
+  .gallery { display: flex; flex-wrap: wrap; gap: 10px; }
+  .gcard { position: relative; width: 110px; }
+  .gcard .thumb { width: 110px; height: 110px; }
+  .gcard .del { position: absolute; top: -8px; right: -8px; width: 30px; height: 30px; border-radius: 50%;
+    border: 1.5px solid var(--danger); background: #fff; color: var(--danger); cursor: pointer; line-height: 1; font-size: 0.9rem; }
+  .gcard .del:hover { background: var(--danger); color: #fff; }
+  .gcard .cap { font-size: 0.75rem; color: var(--ink-soft); text-align: center; margin-top: 4px; }
+  .gempty { color: var(--ink-soft); font-size: 0.9375rem; padding: 8px 0; }
   .file-in { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
   .file-in:focus-visible + label.btn { outline: 3px solid var(--amber); outline-offset: 2px; }
 
@@ -319,17 +327,24 @@
   <div class="dlg-body">
     <div class="field"><label for="p-name">ชื่อสินค้า</label><input type="text" id="p-name"></div>
     <div class="field"><label for="p-detail">รายละเอียดสั้น <span style="font-weight:400;color:var(--ink-soft)">(ไม่บังคับ)</span></label><input type="text" id="p-detail"></div>
-    <div class="field">
-      <span class="label">รูปสินค้า <span style="font-weight:400;color:var(--ink-soft)">(ไม่บังคับ)</span></span>
-      <div class="img-row">
-        <div class="thumb" id="p-thumb">ยังไม่มีรูป</div>
-        <div>
-          <p class="help" style="margin:0 0 8px">ระบบย่อเป็นรูปเล็กเก็บไว้ในฐานข้อมูล จึงแสดงได้แม้มหาวิทยาลัยไม่อนุญาตให้แชร์ไฟล์สาธารณะ</p>
-          <input type="file" class="file-in" id="p-file" accept="image/jpeg,image/png,image/webp">
-          <label class="btn sm" for="p-file">เลือกไฟล์รูป</label>
-          <button type="button" class="btn sm" id="p-imgClear">ลบรูป</button>
-        </div>
+    <div class="field" id="p-imageBox">
+      <span class="label">รูปสินค้า <span style="font-weight:400;color:var(--ink-soft)">(ไม่บังคับ สูงสุด <span id="p-maxPhotos">4</span> รูป)</span></span>
+      <div class="gallery" id="p-photos"></div>
+      <div class="row-actions" style="margin-top:8px">
+        <input type="file" class="file-in" id="p-file" accept="image/jpeg,image/png,image/webp">
+        <label class="btn sm" for="p-file">+ เพิ่มรูปสินค้า</label>
+        <span class="help" style="margin:0">รูปแรกคือรูปที่ขึ้นในหน้าสั่งซื้อ</span>
       </div>
+
+      <span class="label" style="margin-top:18px">ตารางขนาด <span style="font-weight:400;color:var(--ink-soft)">(ไม่บังคับ 1 รูปต่อ 1 สินค้า)</span></span>
+      <div class="gallery" id="p-size"></div>
+      <div class="row-actions" style="margin-top:8px">
+        <input type="file" class="file-in" id="p-sizefile" accept="image/jpeg,image/png,image/webp">
+        <label class="btn sm" for="p-sizefile">เลือกรูปตารางขนาด</label>
+        <span class="help" style="margin:0">เช่น ตารางรอบอก–ความยาวของเสื้อ หรือเอว–ความยาวของกางเกง</span>
+      </div>
+      <p class="help" style="margin-top:8px">ระบบเก็บรูปเต็มเป็นไฟล์ส่วนตัวใน Drive แล้วส่งให้นักศึกษาตอนกดดู จึงไม่ต้องแชร์ไฟล์เป็นสาธารณะ และหน้าสั่งซื้อไม่ช้าลง · ตารางขนาดควรกว้างอย่างน้อย 1000 px เพื่อให้อ่านตัวเลขออก</p>
+      <p class="err" id="err-img" role="alert"></p>
     </div>
     <fieldset>
       <span class="label">รูปแบบราคา</span>
@@ -388,7 +403,6 @@
   let DATA = { config: { texts: {}, images: {}, depts: [] }, products: [], orders: [] };
   let dirty = false;
   const pendingImages = {};      // smallLogo/uniLogo/background -> {type,data} หรือ null (ลบ)
-  let prodImage;                 // undefined = ไม่เปลี่ยน, null = ลบ, object = รูปใหม่
 
   /* กลุ่มข้อความที่เจ้าหน้าที่แก้ได้ (คีย์ต้องตรงกับ APP.TEXT_KEYS ใน Config.gs) */
   const TEXT_GROUPS = [
@@ -481,7 +495,7 @@
   async function loadDemo() {
     applyInit({
       account: 'student.sci@rmutr.ac.th', pwDefault: true, telegramReady: false,
-      orderTotal: 3, orderLimit: 300,
+      orderTotal: 3, orderLimit: 300, maxPhotos: 4,
       config: {
         texts: { orgLine1: 'งานกิจการนักศึกษา คณะวิทยาศาสตร์และเทคโนโลยี', orgLine2: 'มหาวิทยาลัยเทคโนโลยีราชมงคลรัตนโกสินทร์',
           heroTitle: 'สั่งซื้ออุปกรณ์การเรียน', bankName: 'ธนาคารกรุงไทย สาขาศาลายา', accountNumber: '123-4-56789-0',
@@ -490,8 +504,8 @@
         depts: [{ name: 'วิทยาการคอมพิวเตอร์' }, { name: 'เคมี' }, { name: 'เทคโนโลยีการอาหาร', hidden: true }]
       },
       products: [
-        { id: 'P001', name: 'เข็มขัดนักศึกษา', detail: 'หัวเข็มขัดตรามหาวิทยาลัย', priceMode: 'one', price: 180, sizes: [], sortOrder: 1, active: true, hasImage: false, usage: { orders: 30, qty: 44 } },
-        { id: 'P002', name: 'เสื้อกีฬาคณะ', detail: 'ผ้าไมโคร สีกรมท่า', priceMode: 'each', price: 320, sortOrder: 2, active: true, hasImage: false,
+        { id: 'P001', name: 'เข็มขัดนักศึกษา', detail: 'หัวเข็มขัดตรามหาวิทยาลัย', priceMode: 'one', price: 180, sizes: [], sortOrder: 1, active: true, images: { photos: 1, size: 0 }, usage: { orders: 30, qty: 44 } },
+        { id: 'P002', name: 'เสื้อกีฬาคณะ', detail: 'ผ้าไมโคร สีกรมท่า', priceMode: 'each', price: 320, sortOrder: 2, active: true, images: { photos: 2, size: 1 },
           sizes: [['S', 320], ['M', 320], ['L', 320], ['XL', 340], ['2XL', 360]], usage: { orders: 48, qty: 61 } }
       ],
       orders: [
@@ -624,7 +638,8 @@
     // ไม่โหลดรูปสินค้ามาพร้อมหน้ารายการ (ดูได้ตอนกดแก้ไข) หน้าแรกจึงเปิดเร็วแม้สินค้าเยอะ
     $('#productRows').innerHTML = list.length ? list.map((p, i) =>
       '<li class="row product">' +
-      '<div class="pthumb">' + (p.hasImage ? 'มีรูป' : 'ไม่มีรูป') + '</div>' +
+      '<div class="pthumb">' + (p.images && p.images.photos ? p.images.photos + ' รูป' : 'ไม่มีรูป') +
+        (p.images && p.images.size ? '<br>+ตาราง' : '') + '</div>' +
       '<div><div class="who-name">' + Site.esc(p.name) + '</div>' +
       '<div class="mask">' + Site.esc(priceText(p)) + '</div>' +
       '<div class="mask">มีคำสั่งซื้อแล้ว ' + ((p.usage && p.usage.orders) || 0) + ' รายการ</div></div>' +
@@ -684,7 +699,6 @@
 
   function openProduct(p) {
     editing = p || null;
-    prodImage = undefined;
     $('#prodTitle').textContent = p ? 'แก้ไขสินค้า · ' + p.name : 'เพิ่มสินค้า';
     $('#p-name').value = p ? p.name : '';
     $('#p-detail').value = p ? (p.detail || '') : '';
@@ -693,18 +707,13 @@
     const mode = p ? (p.priceMode || 'one') : 'one';
     document.querySelectorAll('input[name="pmode"]').forEach((r) => { r.checked = r.value === mode; });
     sizes = p ? (p.sizes || []).map((s) => Array.isArray(s) ? { name: s[0], price: s[1] } : { name: s.name, price: s.price }) : [];
-    const th = $('#p-thumb');
-    th.innerHTML = p && p.hasImage ? 'กำลังโหลดรูป…' : 'ยังไม่มีรูป';
-    th.classList.toggle('has', !!(p && p.hasImage));
-    if (p && p.hasImage && !demo) {
-      // โหลดรูปเฉพาะตอนเปิดกล่องนี้ ไม่ขนมาพร้อมรายการสินค้าทั้งหมด
-      api('productImage', { id: p.id }).then((r) => {
-        if (editing !== p) return;
-        const url = Site.safeImg(r.image);
-        th.innerHTML = url ? '<img src="' + url + '" alt="">' : 'ยังไม่มีรูป';
-        th.classList.toggle('has', !!url);
-      }).catch(() => { th.textContent = 'โหลดรูปไม่สำเร็จ'; });
-    }
+    // รูปจัดการได้เฉพาะสินค้าที่บันทึกแล้ว (ต้องมีรหัสสินค้าก่อนถึงผูกรูปได้)
+    $('#p-imageBox').hidden = !p;
+    $('#p-maxPhotos').textContent = DATA.maxPhotos || 4;
+    $('#err-img').textContent = '';
+    images = [];
+    renderGallery(p ? 'loading' : 'none');
+    if (p) loadImages(p);
     const usage = p && p.usage ? p.usage : { orders: 0, qty: 0 };
     $('#p-usage').hidden = !usage.orders;
     $('#p-usage').textContent = usage.orders
@@ -716,21 +725,79 @@
     $('#prodDlg').showModal();
   }
   $('#newProduct').addEventListener('click', () => openProduct(null));
-  $('#p-file').addEventListener('change', async (e) => {
-    const f = e.target.files[0];
-    if (!f) return;
+
+  /* ---------- รูปสินค้าและตารางขนาด ---------- */
+  let images = [];
+  function renderGallery(state) {
+    const photos = images.filter((im) => im.kind === 'photo');
+    const size = images.filter((im) => im.kind === 'size');
+    const card = (im, cap) => '<div class="gcard"><div class="thumb has"><img src="' + im.url + '" alt=""></div>' +
+      '<button type="button" class="del" data-delimg="' + Site.esc(im.id) + '" aria-label="ลบรูปนี้">✕</button>' +
+      (cap ? '<div class="cap">' + Site.esc(cap) + '</div>' : '') + '</div>';
+    const placeholder = state === 'loading' ? '<div class="gempty">กำลังโหลดรูป…</div>'
+      : state === 'none' ? '<div class="gempty">บันทึกสินค้าก่อน แล้วจึงเพิ่มรูปได้</div>'
+      : '';
+    $('#p-photos').innerHTML = photos.length ? photos.map((im, i) => card(im, i === 0 ? 'รูปหลัก' : '')).join('')
+      : (placeholder || '<div class="gempty">ยังไม่มีรูปสินค้า</div>');
+    $('#p-size').innerHTML = size.length ? size.map((im) => card(im, '')).join('')
+      : (placeholder || '<div class="gempty">ยังไม่มีตารางขนาด</div>');
+    const full = photos.length >= (DATA.maxPhotos || 4);
+    document.querySelector('label[for="p-file"]').classList.toggle('disabled', full);
+    $('#p-file').disabled = full;
+  }
+  async function loadImages(p) {
+    if (demo) { images = []; renderGallery(''); return; }
     try {
-      // รูปสินค้าถูกส่งไปกับหน้าสั่งซื้อของนักศึกษาทุกคน จึงย่อให้เล็กที่สุดเท่าที่ยังดูรู้เรื่อง
-      const img = await Site.compressImage(f, { maxDim: 320, quality: 0.72, mime: 'image/jpeg', keepBelow: 0, maxBytes: 2 * 1024 * 1024 });
-      prodImage = { type: img.type, data: img.data };
-      $('#p-thumb').innerHTML = '<img src="data:' + img.type + ';base64,' + img.data + '" alt="">';
-      $('#p-thumb').classList.add('has');
-    } catch (err) { toast((err && err.message) || 'อ่านไฟล์รูปไม่สำเร็จ', true); }
-  });
-  $('#p-imgClear').addEventListener('click', () => {
-    prodImage = null;
-    $('#p-thumb').textContent = 'ลบเมื่อกดบันทึก';
-    $('#p-thumb').classList.remove('has');
+      const r = await api('productImages', { id: p.id });
+      if (editing !== p) return;
+      images = r.images || [];
+      renderGallery('');
+    } catch (err) { $('#err-img').textContent = (err && err.message) || 'โหลดรูปไม่สำเร็จ'; renderGallery(''); }
+  }
+  async function uploadImage(file, kind) {
+    if (!editing) return;
+    $('#err-img').textContent = '';
+    const box = kind === 'size' ? $('#p-size') : $('#p-photos');
+    box.innerHTML = '<div class="gempty">กำลังอัปโหลด…</div>';
+    try {
+      // รูปเต็มต้องใหญ่พอให้อ่านตารางขนาดออก ส่วนรูปย่อส่งไปกับหน้าสั่งซื้อจึงต้องเล็ก
+      const full = await Site.compressImage(file, { maxDim: 1200, quality: 0.78, mime: 'image/jpeg', keepBelow: 0, maxBytes: 2 * 1024 * 1024 });
+      const payload = { productId: editing.id, kind: kind, image: { type: full.type, data: full.data } };
+      if (kind === 'photo') {
+        const thumb = await Site.compressImage(file, { maxDim: 320, quality: 0.7, mime: 'image/jpeg', keepBelow: 0, maxBytes: 2 * 1024 * 1024 });
+        payload.thumb = { type: thumb.type, data: thumb.data };
+      }
+      const r = await api('addProductImage', payload);
+      images = r.images || [];
+      renderGallery('');
+      refreshProductCounts();
+      toast(kind === 'size' ? 'บันทึกตารางขนาดแล้ว' : 'เพิ่มรูปสินค้าแล้ว');
+    } catch (err) {
+      $('#err-img').textContent = (err && err.message) || 'อัปโหลดรูปไม่สำเร็จ';
+      renderGallery('');
+    }
+  }
+  function refreshProductCounts() {
+    if (!editing) return;
+    const p = DATA.products.find((x) => x.id === editing.id);
+    if (p) {
+      p.images = { photos: images.filter((im) => im.kind === 'photo').length, size: images.filter((im) => im.kind === 'size').length };
+      renderProducts();
+    }
+  }
+  $('#p-file').addEventListener('change', (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) uploadImage(f, 'photo'); });
+  $('#p-sizefile').addEventListener('change', (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) uploadImage(f, 'size'); });
+  document.addEventListener('click', async (e) => {
+    const imageId = e.target.dataset && e.target.dataset.delimg;
+    if (!imageId || !editing) return;
+    e.target.disabled = true;
+    try {
+      const r = await api('deleteProductImage', { imageId: imageId, productId: editing.id });
+      images = r.images || [];
+      renderGallery('');
+      refreshProductCounts();
+      toast('ลบรูปแล้ว');
+    } catch (err) { $('#err-img').textContent = (err && err.message) || 'ลบรูปไม่สำเร็จ'; }
   });
   $('#p-save').addEventListener('click', async () => {
     $('#err-prod').textContent = '';
@@ -746,7 +813,6 @@
         active: $('#p-active').value === 'true'
       }
     };
-    if (prodImage !== undefined) payload.image = prodImage;
     const btn = $('#p-save');
     btn.disabled = true; btn.textContent = 'กำลังบันทึก…';
     try {

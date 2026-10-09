@@ -27,8 +27,11 @@
     return j;
   }
 
-  async function get(action) {
+  async function get(action, params) {
     var url = apiUrl + (apiUrl.indexOf('?') >= 0 ? '&' : '?') + 'action=' + encodeURIComponent(action);
+    Object.keys(params || {}).forEach(function (k) {
+      url += '&' + encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+    });
     var res;
     try { res = await fetch(url, { cache: 'no-store', redirect: 'follow' }); } catch (e) { throw apiError('NETWORK'); }
     return readJson(res);
